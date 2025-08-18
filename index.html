@@ -53,7 +53,7 @@
       <!-- PAGE 1: LOCATION SELECTION -->
       <div id="page-location">
         <h2 class="text-2xl font-bold text-dark mb-6 text-center" data-translate-key="location_selection_title">Step 1: Choose a Location</h2>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-20">
           
           <!-- Card 1: Use My Location -->
           <div class="location-card">
@@ -109,7 +109,7 @@
             </div>
           </div>
         </div>
-        <div class="flex justify-center mt-8">
+        <div class="action-bar flex justify-center">
           <button id="next-to-category-btn" class="bg-secondary hover:bg-primary text-white font-bold py-3 px-12 rounded-lg transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed transform disabled:scale-100 hover:scale-105 flex items-center gap-2 text-lg" disabled>
             <span data-translate-key="next">Next</span>
             <i class="fas fa-arrow-right"></i>
@@ -119,7 +119,7 @@
 
       <!-- PAGE 2: CATEGORY SELECTION -->
       <div id="page-category" class="hidden">
-        <div class="bg-white p-6 rounded-xl shadow-md">
+        <div class="bg-white p-6 rounded-xl shadow-md pb-20">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-xl font-bold text-dark" data-translate-key="category_selection_title">Step 2: Select a Category</h2>
                 <button id="back-to-main-categories-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors flex items-center gap-2 hidden">
@@ -143,7 +143,7 @@
                 </div>
             </div>
         </div>
-        <div class="flex justify-between mt-6">
+        <div class="action-bar flex justify-between">
           <button id="back-to-location-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg transition-colors flex items-center gap-2">
             <i class="fas fa-arrow-left"></i>
             <span data-translate-key="back">Back</span>
@@ -157,22 +157,31 @@
 
       <!-- PAGE 3: RESULTS -->
       <div id="page-results" class="hidden">
-        <div class="bg-white p-6 rounded-xl shadow-md min-h-[500px] flex flex-col">
+        <div class="bg-white p-6 rounded-xl shadow-md pb-20">
           <h2 class="text-xl font-bold text-dark mb-4" data-translate-key="results_title">Step 3: Discover Places</h2>
           <div id="sorting-tabs" class="flex border-b mb-4">
             <button class="sort-tab-btn flex-1 pb-2 font-semibold" data-translate-key="nearest" data-sort="nearest">Nearest</button>
             <button class="sort-tab-btn flex-1 pb-2 font-semibold" data-translate-key="best" data-sort="best">Best</button>
           </div>
-          <div class="flex-grow grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div id="results-list" class="space-y-4 h-[60vh] overflow-y-auto pr-2">
-              <!-- Results populated here -->
+          <!-- Grid layout for results. On desktop, the grid has a fixed height and the list scrolls. -->
+          <div class="md:grid md:grid-cols-5 md:gap-6 md:h-[calc(100vh-20rem)]">
+            
+            <!-- Map Column: Stays fixed on desktop, on top on mobile -->
+            <div class="md:col-span-3 md:order-2 h-[40vh] md:h-full">
+                <div id="results-map" class="h-full bg-gray-200 rounded-lg">
+                    <!-- Results map shown here -->
+                </div>
             </div>
-            <div id="results-map" class="h-[60vh] bg-gray-200 rounded-lg">
-              <!-- Results map shown here -->
+
+            <!-- List Column: Scrolls on desktop, below map on mobile -->
+            <div class="md:col-span-2 md:order-1 mt-6 md:mt-0 md:overflow-y-auto">
+                <div id="results-list" class="space-y-4 pr-2">
+                    <!-- Results populated here -->
+                </div>
             </div>
           </div>
         </div>
-        <div class="flex justify-between mt-6">
+        <div class="action-bar flex justify-between">
             <button id="back-to-category-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg transition-colors flex items-center gap-2">
               <i class="fas fa-arrow-left"></i>
               <span data-translate-key="back">Back</span>
@@ -188,7 +197,7 @@
   </div>
   
   <!-- Navigation Modal -->
-  <div id="nav-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+  <div id="nav-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
     <div class="bg-white rounded-lg p-6 w-11/12 max-w-sm text-center">
         <h3 class="text-lg font-bold mb-4" data-translate-key="navigate_with">Navigate with...</h3>
         <div class="flex flex-col gap-3">
@@ -200,7 +209,7 @@
   </div>
 
   <!-- Login Modal -->
-  <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+  <div id="login-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
     <div class="bg-white rounded-lg p-8 w-11/12 max-w-sm text-left relative login-card">
         <button id="login-modal-close" class="absolute top-2 right-4 text-2xl text-gray-500 hover:text-gray-800">&times;</button>
         <h3 class="text-xl font-bold mb-6 text-dark text-center" data-translate-key="login_title">Login / Register</h3>

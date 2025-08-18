@@ -756,7 +756,7 @@ const initializeApplication = () => {
                         <i class="fas fa-route text-blue-500"></i>
                         <span class="text-gray-600 font-semibold">${distance.toFixed(1)} km</span>
                     </div>
-                    <button class="navigate-btn bg-secondary text-white px-3 py-1 rounded-md text-xs font-bold hover:bg-primary" data-lat="${location.y}" data-lng="${location.x}" data-title="${title}">${translations[currentLang]['navigate']}</button>
+                    <button class="navigate-btn bg-secondary text-white px-3 py-1 rounded-md text-xs font-bold hover:bg-primary disabled:bg-gray-400" data-lat="${location.y}" data-lng="${location.x}" data-title="${title}">${translations[currentLang]['navigate']}</button>
                 </div>
             `;
             card.addEventListener('click', (e) => {
@@ -776,26 +776,32 @@ const initializeApplication = () => {
             }
         });
         
-        document.querySelectorAll('.navigate-btn').forEach(btn => btn.addEventListener('click', (e) => {
-            const target = e.currentTarget as HTMLElement;
-            const lat = target.dataset.lat;
-            const lng = target.dataset.lng;
-            
-            navNeshanLink.href = `https://neshan.org/maps/places/${lat},${lng}`;
-            navGoogleLink.href = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-            
-            navModal?.classList.remove('hidden');
-        }));
+        document.querySelectorAll('.navigate-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const target = e.currentTarget as HTMLButtonElement;
+                const lat = parseFloat(target.dataset.lat!);
+                const lng = parseFloat(target.dataset.lng!);
+        
+                if (userLocation.lat && userLocation.lng) {
+                    navNeshanLink.href = `https://neshan.org/maps/routing/car/origin/${userLocation.lat},${userLocation.lng}/destination/${lat},${lng}`;
+                    navGoogleLink.href = `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${lat},${lng}`;
+                    navModal?.classList.remove('hidden');
+                } else {
+                    alert(translations[currentLang]['location_unavailable']);
+                }
+            });
+        });
 
         if (resultsMap && resultMarkers.length > 0) {
             if (userLocation.lat && userLocation.lng) {
                  const userMarker = new L.Marker([userLocation.lat, userLocation.lng], {
                     icon: L.icon({
-                        iconUrl: 'https://static.neshan.org/sdk/leaflet/1.4.0/images/marker-icon-2x-red.png',
-                        shadowUrl: 'https://static.neshan.org/sdk/leaflet/1.4.0/images/marker-shadow.png',
+                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
                         iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
                     })
-                }).addTo(resultsMap).bindPopup("Your Location");
+                }).addTo(resultsMap).bindPopup(translations[currentLang]['location_from_gps']);
                 resultMarkers.push(userMarker);
                 bounds.extend([userLocation.lat, userLocation.lng]);
             }
