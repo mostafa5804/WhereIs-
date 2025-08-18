@@ -85,8 +85,16 @@
           <!-- Card 1: Use My Location -->
           <div class="location-card">
             <i class="fas fa-location-arrow card-icon"></i>
-            <h3 class="card-title" data-translate-key="use_my_location">Use My Current Location</h3>
-            <p class="card-description" data-translate-key="fastest_way_desc">Automatically detect your position using GPS for a quick start.</p>
+            <div class="flex justify-center items-center gap-2">
+              <h3 class="card-title" data-translate-key="use_my_location_title">Fastest Option</h3>
+              <div class="relative group">
+                  <i class="fas fa-info-circle text-gray-400 cursor-pointer"></i>
+                  <span class="absolute bottom-full left-1/2 -translate-x-1/2 z-10 mb-2 w-56 rounded-md bg-gray-800 p-2 text-center text-sm text-white opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none" data-translate-key="fastest_way_desc">
+                    Automatically detect your position using GPS for a quick start.
+                  </span>
+              </div>
+            </div>
+            <div class="flex-grow"></div> <!-- Spacer to push button down -->
             <button id="use-my-location-btn" class="card-button mt-auto">
               <i class="fas fa-location-arrow mr-2"></i>
               <span data-translate-key="use_my_location">Use My Current Location</span>
@@ -96,8 +104,15 @@
           <!-- Card 2: Select on Map -->
           <div class="location-card">
             <i class="fas fa-map-marked-alt card-icon"></i>
-            <h3 class="card-title" data-translate-key="select_from_map_title">Select on the Map</h3>
-            <p class="card-description" data-translate-key="pick_on_map_desc">Click directly on the map to choose your exact point of interest.</p>
+            <div class="flex justify-center items-center gap-2">
+              <h3 class="card-title" data-translate-key="select_from_map_title">Select on the Map</h3>
+              <div class="relative group">
+                  <i class="fas fa-info-circle text-gray-400 cursor-pointer"></i>
+                  <span class="absolute bottom-full left-1/2 -translate-x-1/2 z-10 mb-2 w-56 rounded-md bg-gray-800 p-2 text-center text-sm text-white opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none" data-translate-key="pick_on_map_desc">
+                    Click directly on the map to choose your exact point of interest.
+                  </span>
+              </div>
+            </div>
              <p id="location-status" class="text-center text-sm text-gray-600 dark:text-gray-400 my-2 h-5"></p>
             <div id="location-map" class="h-full min-h-[250px] bg-gray-200 dark:bg-gray-700 rounded-lg w-full mt-2 flex-grow">
                <p class="text-gray-500" data-translate-key="map_view_placeholder">Map will be shown here</p>
@@ -107,8 +122,15 @@
           <!-- Card 3: Select From List -->
           <div class="location-card">
             <i class="fas fa-list-ul card-icon"></i>
-            <h3 class="card-title" data-translate-key="select_from_list_title">Select from a List</h3>
-            <p class="card-description" data-translate-key="select_from_list_desc">Browse through provinces, counties, and cities to pinpoint a location.</p>
+            <div class="flex justify-center items-center gap-2">
+              <h3 class="card-title" data-translate-key="select_from_list_title">Select from a List</h3>
+              <div class="relative group">
+                <i class="fas fa-info-circle text-gray-400 cursor-pointer"></i>
+                <span class="absolute bottom-full left-1/2 -translate-x-1/2 z-10 mb-2 w-56 rounded-md bg-gray-800 p-2 text-center text-sm text-white opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none" data-translate-key="select_from_list_desc">
+                  Browse through provinces, counties, and cities to pinpoint a location.
+                </span>
+              </div>
+            </div>
             <div class="space-y-3 mt-4 flex-grow">
               <div>
                 <label for="province-select" class="sr-only" data-translate-key="select_province"></label>
