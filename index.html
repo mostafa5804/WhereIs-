@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WhereIs? - Location Finder</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha525-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="https://static.neshan.org/sdk/leaflet/v1.9.4/neshan-sdk/v1.0.8/index.css"/>
   <script src="https://static.neshan.org/sdk/leaflet/v1.9.4/neshan-sdk/v1.0.8/index.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,30 +43,35 @@
   <div id="app-container" class="container mx-auto p-4 md:p-6">
     <!-- Header -->
     <header class="flex justify-between items-center bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md gap-4">
-      <div class="flex items-center gap-4 flex-shrink-0">
+      <div class="flex items-center gap-4 flex-grow">
         <h1 id="site-name-btn" class="text-3xl font-bold text-primary dark:text-secondary cursor-pointer" data-translate-key="site_name">WhereIs?</h1>
       </div>
-      <div class="flex-grow min-w-0">
-          <div id="quick-search-container" class="relative">
-              <input type="search" id="quick-search-input" placeholder="Search for places..." class="w-full bg-gray-100 dark:bg-gray-700 text-dark dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-secondary">
-              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <i class="fas fa-search text-gray-400"></i>
-              </div>
-          </div>
-          <div id="quick-search-error" class="text-red-500 text-xs mt-1 text-center hidden">Please select a location first.</div>
-      </div>
-      <div class="flex items-center gap-4 flex-shrink-0">
+      <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0">
         <button id="theme-toggle-btn" class="text-primary dark:text-secondary text-2xl">
             <i class="fas fa-moon"></i>
         </button>
+        <div class="relative" id="language-dropdown-container">
+          <button id="language-dropdown-toggle" class="text-2xl px-2 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+            <span id="current-lang-flag">🇮🇷</span>
+          </button>
+          <div id="language-dropdown-menu" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-1 z-50 border dark:border-gray-700">
+            <button class="lang-btn w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3" data-lang="fa">
+              <span class="text-xl">🇮🇷</span>
+              <span>فارسی (Farsi)</span>
+            </button>
+            <button class="lang-btn w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3" data-lang="en">
+              <span class="text-xl">🇬🇧</span>
+              <span>English</span>
+            </button>
+            <button class="lang-btn w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3" data-lang="ar">
+              <span class="text-xl">🇸🇦</span>
+              <span>العربية (Arabic)</span>
+            </button>
+          </div>
+        </div>
         <button id="user-icon-btn" class="text-primary dark:text-secondary text-2xl">
             <i class="fas fa-user"></i>
         </button>
-        <div id="language-switcher" class="hidden sm:flex gap-2 text-sm">
-          <button data-lang="en" class="lang-btn px-3 py-1 rounded-md font-semibold text-gray-700 dark:text-gray-300">EN</button>
-          <button data-lang="fa" class="lang-btn px-3 py-1 rounded-md font-semibold text-gray-700 dark:text-gray-300">FA</button>
-          <button data-lang="ar" class="lang-btn px-3 py-1 rounded-md font-semibold text-gray-700 dark:text-gray-300">AR</button>
-        </div>
       </div>
     </header>
 
@@ -151,6 +156,25 @@
                 </button>
             </div>
             
+            <div class="mb-6 relative">
+              <input type="search" id="quick-search-input" placeholder="Search for places (e.g., cafe, park)..." data-translate-key="search_placeholder" class="w-full bg-light dark:bg-gray-700 text-dark dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-lg py-3 pl-12 pr-4 text-base focus:outline-none focus:ring-2 focus:ring-secondary">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                  <i class="fas fa-search text-gray-400 text-lg"></i>
+              </div>
+            </div>
+            <p id="quick-search-error" class="text-red-500 text-xs -mt-4 mb-4 text-center hidden"></p>
+            
+            <div class="relative mb-6">
+                <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                    <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                </div>
+                <div class="relative flex justify-center">
+                    <span class="bg-white dark:bg-gray-800 px-3 text-base font-medium text-gray-500 dark:text-gray-400" data-translate-key="or_divider">
+                    OR
+                    </span>
+                </div>
+            </div>
+
             <div id="main-categories-view">
                 <!-- Main categories icons populated by JS -->
             </div>
@@ -172,28 +196,25 @@
 
       <!-- PAGE 3: RESULTS -->
       <div id="page-results" class="hidden">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md pb-20">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md pb-20 flex flex-col h-[calc(100vh-8rem)]">
           <h2 class="text-xl font-bold text-dark dark:text-white mb-4" data-translate-key="results_title">Step 3: Discover Places</h2>
-          <div id="results-controls" class="flex flex-wrap items-center border-b dark:border-gray-700 mb-4 pb-2 gap-4">
-              <!-- Sorting tabs removed as there's only one sort order now -->
+          
+          <!-- Map Container -->
+          <div id="results-map" class="h-[40%] flex-shrink-0 bg-gray-200 dark:bg-gray-700 rounded-lg">
+              <!-- Results map shown here -->
           </div>
-          <!-- Grid layout for results. On desktop, the grid has a fixed height and the list scrolls. -->
-          <div class="md:grid md:grid-cols-5 md:gap-6 md:h-[calc(100vh-22rem)]">
-            
-            <!-- Map Column: Stays fixed on desktop, on top on mobile -->
-            <div class="md:col-span-3 md:order-2 h-[40vh] md:h-full">
-                <div id="results-map" class="h-full bg-gray-200 dark:bg-gray-700 rounded-lg">
-                    <!-- Results map shown here -->
-                </div>
-            </div>
 
-            <!-- List Column: Scrolls on desktop, below map on mobile -->
-            <div class="md:col-span-2 md:order-1 mt-6 md:mt-0 md:overflow-y-auto">
-                <div id="results-list" class="space-y-4 pr-2">
-                    <!-- Results populated here -->
-                </div>
-            </div>
+          <!-- Tabs -->
+          <div id="results-tabs" class="flex border-b dark:border-gray-700 mt-4">
+            <button id="sort-nearest-btn" class="results-tab" data-translate-key="nearest">Nearest</button>
+            <button id="sort-best-btn" class="results-tab" data-translate-key="best">Best</button>
           </div>
+
+          <!-- List Container -->
+          <div id="results-list" class="flex-1 overflow-y-auto mt-4 space-y-4 pr-2">
+              <!-- Results populated here -->
+          </div>
+
         </div>
         <div class="action-bar flex justify-between">
             <button id="back-to-category-btn" class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-bold py-3 px-6 rounded-lg transition-colors flex items-center gap-2">
@@ -211,16 +232,27 @@
   </div>
   
   <!-- Navigation Modal -->
-  <div id="nav-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-11/12 max-w-sm text-center">
-        <h3 class="text-lg font-bold mb-4 text-dark dark:text-white" data-translate-key="navigate_with">Navigate with...</h3>
-        <div class="flex flex-col gap-3">
-            <a id="nav-neshan-link" href="#" target="_blank" class="block w-full bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition-colors" data-translate-key="navigate_neshan">Neshan</a>
-            <a id="nav-google-link" href="#" target="_blank" class="block w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition-colors" data-translate-key="navigate_google">Google Maps</a>
+  <div id="nav-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden">
+    <div id="nav-modal-content" class="bg-white dark:bg-gray-800 rounded-2xl p-6 w-11/12 max-w-xs text-center transform transition-all">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold text-dark dark:text-white" data-translate-key="navigate_with">Navigate with...</h3>
+            <button id="nav-modal-close" class="text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white text-2xl leading-none">&times;</button>
         </div>
-        <button id="nav-modal-close" class="mt-4 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white" data-translate-key="close">Close</button>
+        <div class="space-y-4">
+            <a id="nav-neshan-link" href="#" target="_blank" class="nav-provider-link bg-light dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-gray-600">
+                <img src="https://neshan.org/wp-content/uploads/2024/01/Asset-51x-1.svg" alt="Neshan Logo" class="w-10 h-10">
+                <span class="text-lg font-semibold text-dark dark:text-white" data-translate-key="navigate_neshan">Neshan</span>
+                <i class="fas fa-chevron-right text-gray-400 dark:text-gray-500"></i>
+            </a>
+            <a id="nav-google-link" href="#" target="_blank" class="nav-provider-link bg-light dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-gray-600">
+                 <img src="https://developers.google.com/static/maps/images/maps-icon.svg" alt="Google Maps Logo" class="w-10 h-10">
+                <span class="text-lg font-semibold text-dark dark:text-white" data-translate-key="navigate_google">Google Maps</span>
+                <i class="fas fa-chevron-right text-gray-400 dark:text-gray-500"></i>
+            </a>
+        </div>
     </div>
   </div>
+
 
   <!-- Login Modal -->
   <div id="login-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
@@ -248,14 +280,6 @@
         </form>
     </div>
   </div>
-
-  <!-- Place Details Modal -->
-  <div id="details-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden">
-    <div id="details-modal-content" class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-11/12 max-w-3xl max-h-[90vh] flex flex-col relative text-left">
-      <!-- Modal Content Populated by JS -->
-    </div>
-  </div>
-
 
   <script type="module" src="index.tsx"></script>
 </body>

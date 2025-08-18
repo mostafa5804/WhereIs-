@@ -10,6 +10,7 @@ const translations = {
         categories: "Categories",
         subcategories: "Subcategories",
         nearest: "Nearest",
+        best: "Best",
         no_results: "No results found in this area. Try a different search or location.",
         view_details: "View Details",
         getting_location: "Getting Location...",
@@ -64,6 +65,8 @@ const translations = {
         save: "Save",
         votes: "votes",
         phone_not_available: "Phone number not available",
+        search_placeholder: "Search for places (e.g., cafe, park)...",
+        or_divider: "OR",
     },
     fa: {
         site_name: "کجاست؟",
@@ -74,6 +77,7 @@ const translations = {
         categories: "دسته‌بندی‌ها",
         subcategories: "زیرمجموعه‌ها",
         nearest: "نزدیک‌ترین",
+        best: "بهترین",
         no_results: "نتیجه‌ای در این محدوده یافت نشد. جستجو یا مکان دیگری را امتحان کنید.",
         view_details: "مشاهده جزئیات",
         getting_location: "در حال دریافت موقعیت...",
@@ -128,6 +132,8 @@ const translations = {
         save: "ذخیره",
         votes: "رأی",
         phone_not_available: "شماره تلفن موجود نیست",
+        search_placeholder: "جستجوی مکان‌ها (مثلاً کافه، پارک)...",
+        or_divider: "یا",
     },
     ar: {
         site_name: "أين هو؟",
@@ -138,6 +144,7 @@ const translations = {
         categories: "الفئات",
         subcategories: "فئات فرعية",
         nearest: "الأقرب",
+        best: "الأفضل",
         no_results: "لم يتم العثور على نتائج في هذه المنطقة. جرب بحثًا أو موقعًا مختلفًا.",
         view_details: "عرض التفاصيل",
         getting_location: "جاري الحصول على الموقع...",
@@ -192,6 +199,8 @@ const translations = {
         save: "حفظ",
         votes: "صوت",
         phone_not_available: "رقم الهاتف غير متوفر",
+        search_placeholder: "ابحث عن أماكن (مثل مقهى، حديقة)...",
+        or_divider: "أو",
     },
 };
 
@@ -281,19 +290,21 @@ const categoryIcons = {
 
 const initializeApplication = () => {
     // --- STATE ---
-    let currentLang = 'en';
+    let currentLang = 'fa';
     let divisionsData: any = {};
     let placeCategories: any[] = [];
     let userLocation: { lat: number | null, lng: number | null } = { lat: null, lng: null };
     let locationMap: any = null;
     let resultsMap: any = null;
     let locationMarker: any = null;
-    let resultMarkers: any[] = [];
+    let resultMarkersMap = new Map<string, any>();
+    let highlightedMarkerInfo: { marker: any; originalIcon: any } | null = null;
     let isochroneLayer: any = null;
     let selectedSubCategories = new Set<string>();
     let currentResults: any[] = [];
     let originalResults: any[] = [];
     let isDarkMode = false;
+    let activeSortTab: 'nearest' | 'best' = 'nearest';
     const NESHAN_WEB_API_KEY = "web.36ff66f5c7c54199843b838e079237f6";
     const NESHAN_SERVICE_API_KEY = "service.267bed159b794099b813606c16305664";
     const tehranCoords = { lat: 35.6892, lng: 51.3890 };
@@ -313,6 +324,9 @@ const initializeApplication = () => {
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const quickSearchInput = document.getElementById('quick-search-input') as HTMLInputElement;
     const quickSearchError = document.getElementById('quick-search-error');
+    const languageDropdownToggle = document.getElementById('language-dropdown-toggle');
+    const languageDropdownMenu = document.getElementById('language-dropdown-menu');
+    const currentLangFlag = document.getElementById('current-lang-flag');
 
     const locationDataError = document.getElementById('location-data-error');
     const useMyLocationBtn = document.getElementById('use-my-location-btn') as HTMLButtonElement;
@@ -336,8 +350,10 @@ const initializeApplication = () => {
     const navModalClose = document.getElementById('nav-modal-close');
     const navNeshanLink = document.getElementById('nav-neshan-link') as HTMLAnchorElement;
     const navGoogleLink = document.getElementById('nav-google-link') as HTMLAnchorElement;
-    const detailsModal = document.getElementById('details-modal');
-    const detailsModalContent = document.getElementById('details-modal-content');
+
+    // Results Page Sort Tabs
+    const sortNearestBtn = document.getElementById('sort-nearest-btn');
+    const sortBestBtn = document.getElementById('sort-best-btn');
 
 
     // --- NAVIGATION BUTTONS ---
@@ -367,7 +383,7 @@ const initializeApplication = () => {
     };
     
     const updateCategoryUI = () => {
-        searchBtn.disabled = selectedSubCategories.size === 0;
+        searchBtn.disabled = selectedSubCategories.size === 0 && quickSearchInput.value.trim() === '';
     };
 
     const goToCategoryPage = () => {
@@ -377,25 +393,32 @@ const initializeApplication = () => {
     };
 
     // --- LANGUAGE & TRANSLATION ---
+    const langFlags = {
+        fa: '🇮🇷',
+        en: '🇬🇧',
+        ar: '🇸🇦'
+    };
     const switchLanguage = (lang) => {
         currentLang = lang;
         const isRTL = lang === 'fa' || lang === 'ar';
         document.documentElement.lang = lang;
         document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
 
+        if (currentLangFlag) {
+            currentLangFlag.textContent = langFlags[lang];
+        }
+
         document.querySelectorAll('[data-translate-key]').forEach(el => {
             const htmlEl = el as HTMLElement;
             const key = htmlEl.dataset.translateKey;
             if (key && translations[lang][key]) {
-                el.textContent = translations[lang][key];
+                const translation = translations[lang][key];
+                if (htmlEl.hasAttribute('placeholder')) {
+                    (htmlEl as HTMLInputElement).placeholder = translation;
+                } else {
+                    el.textContent = translation;
+                }
             }
-        });
-
-        langButtons.forEach(btn => {
-            const htmlBtn = btn as HTMLElement;
-            htmlBtn.classList.toggle('bg-primary', htmlBtn.dataset.lang === lang);
-            htmlBtn.classList.toggle('dark:bg-secondary', htmlBtn.dataset.lang === lang);
-            htmlBtn.classList.toggle('text-white', htmlBtn.dataset.lang === lang);
         });
         
         if (provinceSelect.value === '') provinceSelect.firstElementChild.textContent = `-- ${translations[currentLang]['select_province']} --`;
@@ -404,7 +427,7 @@ const initializeApplication = () => {
         
         renderCategoryFilters();
         if(pageResults && !pageResults.classList.contains('hidden')) {
-            renderResults();
+            sortAndRenderResults();
         }
     };
 
@@ -498,13 +521,46 @@ const initializeApplication = () => {
         }
         locationMap.flyTo([lat, lng], zoom);
     };
+    
+    const highlightResultOnMap = (uid: string) => {
+        const markerToHighlight = resultMarkersMap.get(uid);
+        const result = currentResults.find(r => r.uid === uid);
+
+        if (!markerToHighlight || !result) return;
+        
+        // Reset previously highlighted marker
+        if (highlightedMarkerInfo) {
+            highlightedMarkerInfo.marker.setIcon(highlightedMarkerInfo.originalIcon);
+        }
+
+        const highlightedIcon = L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+        
+        // Highlight the new one
+        highlightedMarkerInfo = {
+            marker: markerToHighlight,
+            originalIcon: markerToHighlight.options.icon
+        };
+        markerToHighlight.setIcon(highlightedIcon);
+        markerToHighlight.setZIndexOffset(1000).openPopup();
+
+        resultsMap.flyTo([result.location.y, result.location.x], 16);
+    };
 
     const updateResultsMap = () => {
         if (!resultsMap) initializeResultsMap();
     
-        resultMarkers.forEach(marker => resultsMap.removeLayer(marker));
-        resultMarkers = [];
-    
+        // Clear previous markers from map and state
+        resultMarkersMap.forEach(marker => resultsMap.removeLayer(marker));
+        resultMarkersMap.clear();
+        highlightedMarkerInfo = null;
+
         if (isochroneLayer) resultsMap.removeLayer(isochroneLayer);
     
         const userMarkerIcon = L.icon({
@@ -539,12 +595,12 @@ const initializeApplication = () => {
         const resultsToDisplay = currentResults;
     
         resultsToDisplay.forEach((result) => {
-            const { location } = result;
+            const { location, uid } = result;
             if (location) {
                 const marker = L.marker([location.y, location.x], { icon: resultMarkerIcon }).addTo(resultsMap);
                 const categoryName = getCategoryDisplayName(result.type);
                 marker.bindPopup(`<b>${result.title}</b><br>${categoryName}`);
-                resultMarkers.push(marker);
+                resultMarkersMap.set(uid, marker);
                 bounds.extend([location.y, location.x]);
             }
         });
@@ -787,6 +843,12 @@ const initializeApplication = () => {
         showPage(pageResults);
         renderSkeletons();
         initializeResultsMap();
+
+        const searchTerms = new Set(selectedSubCategories);
+        const quickSearchTerm = quickSearchInput.value.trim();
+        if(quickSearchTerm) {
+            searchTerms.add(quickSearchTerm);
+        }
     
         const oldWarning = document.getElementById('search-warning');
         if (oldWarning) oldWarning.parentElement.removeChild(oldWarning);
@@ -799,7 +861,7 @@ const initializeApplication = () => {
             return;
         }
     
-        const searchPromises = Array.from(selectedSubCategories).map(term => {
+        const searchPromises = Array.from(searchTerms).map(term => {
             const url = `https://api.neshan.org/v1/search?term=${term}&lat=${lat}&lng=${lng}`;
             return fetch(url, { headers: { 'Api-Key': NESHAN_SERVICE_API_KEY } }).then(async res => {
                 if (!res.ok) {
@@ -880,7 +942,7 @@ const initializeApplication = () => {
         if (combinedResults.length === 0) {
              currentResults = [];
              originalResults = [];
-             renderResults();
+             sortAndRenderResults();
              return;
         }
 
@@ -915,28 +977,23 @@ const initializeApplication = () => {
         if (resultsWithinProximity.length === 0) {
             currentResults = [];
             originalResults = [];
-            renderResults();
+            sortAndRenderResults();
             return;
         }
 
         originalResults = resultsWithinProximity.map(r => {
             return {
                 ...r,
-                uid: `${r.location.y}-${r.location.x}`
+                uid: `${r.title}-${r.location.y}-${r.location.x}`
             };
         });
-
-        currentResults = [...originalResults];
         
-        // Default and only sort is by nearest
-        currentResults.sort((a, b) => a.distance.value - b.distance.value);
-
-        renderResults();
+        sortAndRenderResults();
     };
     
     const handleQuickSearch = () => {
         const term = quickSearchInput.value.trim();
-        if (!term) return;
+        if (!term && selectedSubCategories.size === 0) return;
 
         if (userLocation.lat === null || userLocation.lng === null) {
             quickSearchError.textContent = translations[currentLang]['quick_search_error'];
@@ -944,14 +1001,28 @@ const initializeApplication = () => {
             setTimeout(() => quickSearchError.classList.add('hidden'), 3000);
             return;
         }
-
-        selectedSubCategories.clear();
-        selectedSubCategories.add(term);
-        quickSearchInput.value = '';
         searchPlaces();
     };
 
     // --- RESULTS RENDERING & SORTING ---
+    const sortAndRenderResults = () => {
+        currentResults = [...originalResults];
+
+        if (activeSortTab === 'nearest') {
+            currentResults.sort((a, b) => a.distance.value - b.distance.value);
+        } else { // 'best'
+            currentResults.sort((a, b) => b.votes - a.votes);
+        }
+        
+        // Update tab UI
+        if(sortNearestBtn && sortBestBtn) {
+            sortNearestBtn.classList.toggle('active', activeSortTab === 'nearest');
+            sortBestBtn.classList.toggle('active', activeSortTab === 'best');
+        }
+
+        renderResults();
+    };
+
     const renderSkeletons = () => {
         if (!resultsList) return;
         resultsList.innerHTML = '';
@@ -995,20 +1066,16 @@ const initializeApplication = () => {
 
         resultsToDisplay.forEach(result => {
             const card = document.createElement('div');
-            card.className = 'result-card bg-white dark:bg-gray-800 rounded-lg shadow-md border dark:border-gray-700 flex flex-col relative transition-all duration-200 hover:shadow-xl hover:-translate-y-1';
-            
+            card.className = 'result-card bg-white dark:bg-gray-800 rounded-lg shadow-md border dark:border-gray-700 flex flex-col relative transition-all duration-200 hover:shadow-xl hover:-translate-y-1 cursor-pointer';
+            card.dataset.uid = result.uid;
+
             const distance = (result.distance.value / 1000).toFixed(1);
             const categoryName = getCategoryDisplayName(result.type);
             const iconClass = categoryIcons[result.type] || 'fas fa-map-marker-alt';
             
             card.innerHTML = `
-                <!-- Bookmark Icon -->
-                <button class="bookmark-btn absolute top-3 right-3 text-gray-400 hover:text-accent text-xl z-10" data-uid="${result.uid}">
-                    <i class="far fa-bookmark"></i>
-                </button>
-
-                <!-- Main Clickable Area -->
-                <div class="details-click-area p-4 cursor-pointer" data-uid="${result.uid}">
+                <!-- Main Content Area -->
+                <div class="p-4 flex-grow">
                     <div class="flex items-start gap-3">
                         <div class="bg-light dark:bg-gray-700 p-3 rounded-full flex-shrink-0">
                             <i class="${iconClass} text-primary dark:text-secondary text-xl"></i>
@@ -1026,57 +1093,41 @@ const initializeApplication = () => {
                 </div>
 
                 <!-- Action Bar -->
-                <div class="action-bar-container mt-auto p-2 border-t dark:border-gray-700 flex justify-around">
+                <div class="action-bar-container mt-auto p-2 border-t dark:border-gray-700 flex justify-around items-center">
                     <button class="action-bar-btn navigate-btn" data-lat="${result.location.y}" data-lng="${result.location.x}" data-title="${result.title}">
                         <i class="fas fa-route"></i>
                         <span data-translate-key="directions">${translations[currentLang]['directions']}</span>
                     </button>
-                    <button class="action-bar-btn call-btn" data-uid="${result.uid}" title="${translations[currentLang]['phone_not_available']}" disabled>
-                        <i class="fas fa-phone"></i>
-                        <span data-translate-key="call">${translations[currentLang]['call']}</span>
-                    </button>
-                    <button class="action-bar-btn share-btn" data-uid="${result.uid}">
+                     <div class="action-bar-btn" title="${result.votes} ${translations[currentLang]['votes']}">
+                        <i class="fas fa-star text-accent"></i>
+                        <span>${result.votes}</span>
+                    </div>
+                    <button class="action-bar-btn share-btn">
                         <i class="fas fa-share-alt"></i>
                         <span data-translate-key="share">${translations[currentLang]['share']}</span>
                     </button>
                 </div>
             `;
             resultsList.appendChild(card);
-        });
-        
-        document.querySelectorAll('.details-click-area').forEach(btn => {
-            btn.addEventListener('click', e => {
+            
+            card.addEventListener('click', (e) => {
+                const target = e.target as HTMLElement;
+                // Don't highlight map if a button inside the card was clicked
+                if (target.closest('.action-bar-btn')) {
+                    return;
+                }
                 const uid = (e.currentTarget as HTMLElement).dataset.uid;
-                const result = currentResults.find(r => r.uid === uid);
-                if (result) openDetailsModal(result);
+                if(uid) highlightResultOnMap(uid);
             });
-        });
 
-        document.querySelectorAll('.navigate-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            card.querySelector('.navigate-btn').addEventListener('click', (e) => {
                 e.stopPropagation();
                 const target = e.currentTarget as HTMLElement;
                 openNavModal(target.dataset.lat, target.dataset.lng, target.dataset.title);
             });
-        });
-
-        document.querySelectorAll('.bookmark-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            
+             card.querySelector('.share-btn').addEventListener('click', (e) => {
                 e.stopPropagation();
-                const icon = btn.querySelector('i');
-                if (icon) {
-                    icon.classList.toggle('far'); // empty
-                    icon.classList.toggle('fas'); // filled
-                    icon.classList.toggle('text-accent');
-                }
-            });
-        });
-        
-        document.querySelectorAll('.share-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const uid = (e.currentTarget as HTMLElement).dataset.uid;
-                const result = currentResults.find(r => r.uid === uid);
                 if (result) {
                     const shareUrl = `https://neshan.org/maps?destination=${result.location.y},${result.location.x}`;
                     const shareText = `Check out ${result.title} on Neshan Maps!`;
@@ -1097,7 +1148,7 @@ const initializeApplication = () => {
                 }
             });
         });
-
+        
         updateResultsMap();
     };
     
@@ -1127,49 +1178,29 @@ const initializeApplication = () => {
         loginModal.classList.add('hidden');
         registerMessage.classList.add('hidden');
     }
-
-    const openDetailsModal = (result) => {
-        detailsModal.classList.remove('hidden');
-        renderDetailsModalContent(result);
-    };
-
-    const renderDetailsModalContent = (result) => {
-        const { title, address, type, location } = result;
-        const categoryName = getCategoryDisplayName(type);
-
-        detailsModalContent.innerHTML = `
-            <button id="details-modal-close" class="absolute top-3 right-3 text-2xl text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white z-20">&times;</button>
-            <div class="overflow-y-auto">
-                <div id="details-map" class="w-full h-64 bg-gray-200 dark:bg-gray-700"></div>
-                <div class="p-6">
-                    <h2 class="text-2xl font-bold text-dark dark:text-white">${title}</h2>
-                    <p class="text-md text-primary dark:text-secondary mb-3">${categoryName}</p>
-                    <p class="text-gray-700 dark:text-gray-300"><i class="fas fa-map-marker-alt w-5 text-center mr-2 text-gray-400"></i>${address || 'Address not available'}</p>
-                </div>
-            </div>
-        `;
-
-        document.getElementById('details-modal-close').addEventListener('click', () => detailsModal.classList.add('hidden'));
-
-        try {
-            const detailMap = new L.Map('details-map', {
-                key: NESHAN_WEB_API_KEY,
-                maptype: isDarkMode ? 'standard-night' : 'dreamy',
-                poi: true,
-                traffic: false,
-                center: [location.y, location.x],
-                zoom: 16
-            });
-            L.marker([location.y, location.x]).addTo(detailMap);
-        } catch (e) {
-            console.error("Could not initialize details map:", e);
-            document.getElementById('details-map').innerText = "Could not load map.";
-        }
-    };
     
     // --- EVENT LISTENERS ---
     const setupEventListeners = () => {
-        langButtons.forEach(btn => btn.addEventListener('click', (e) => switchLanguage((e.currentTarget as HTMLElement).dataset.lang)));
+        langButtons.forEach(btn => btn.addEventListener('click', (e) => {
+            const newLang = (e.currentTarget as HTMLElement).dataset.lang;
+            if (newLang) {
+                switchLanguage(newLang);
+                languageDropdownMenu?.classList.add('hidden');
+            }
+        }));
+
+        languageDropdownToggle?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            languageDropdownMenu?.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', (e) => {
+            const container = document.getElementById('language-dropdown-container');
+            if (languageDropdownMenu && !languageDropdownMenu.classList.contains('hidden') && container && !container.contains(e.target as Node)) {
+                 languageDropdownMenu.classList.add('hidden');
+            }
+        });
+
         siteNameBtn.addEventListener('click', () => {
             selectedSubCategories.clear();
             userLocation = { lat: null, lng: null };
@@ -1185,24 +1216,38 @@ const initializeApplication = () => {
 
         nextToCategoryBtn.addEventListener('click', goToCategoryPage);
         backToLocationBtn.addEventListener('click', () => showPage(pageLocation));
-        searchBtn.addEventListener('click', searchPlaces);
+        searchBtn.addEventListener('click', handleQuickSearch);
         backToCategoryBtn.addEventListener('click', goToCategoryPage);
         newSearchBtn.addEventListener('click', () => {
              selectedSubCategories.clear();
+             quickSearchInput.value = '';
              showPage(pageLocation)
         });
 
         quickSearchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') handleQuickSearch();
         });
+        quickSearchInput.addEventListener('input', updateCategoryUI);
         
         backToMainCategoriesBtn.addEventListener('click', () => renderCategoryFilters());
+
+        // Sort tabs
+        sortNearestBtn?.addEventListener('click', () => {
+            activeSortTab = 'nearest';
+            sortAndRenderResults();
+        });
+
+        sortBestBtn?.addEventListener('click', () => {
+            activeSortTab = 'best';
+            sortAndRenderResults();
+        });
+
 
         // Modals
         userIconBtn.addEventListener('click', openLoginModal);
         loginModalClose.addEventListener('click', closeLoginModal);
         navModalClose.addEventListener('click', closeNavModal);
-        [navModal, loginModal, detailsModal].forEach(modal => {
+        [navModal, loginModal].forEach(modal => {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
                     modal.classList.add('hidden');
