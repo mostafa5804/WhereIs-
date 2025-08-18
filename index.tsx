@@ -827,11 +827,11 @@ const initializeApplication = () => {
     // --- DATA LOADING ---
     const loadData = async () => {
         try {
-            // Using fetch() as it's more reliable for loading static JSON files
-            // across different deployment environments like Vercel and GitHub Pages.
+            // Using fetch() with explicit relative paths `./` to ensure they resolve correctly
+            // from the current path, which is more robust for deployment environments.
             const [divisionsResponse, categoriesResponse] = await Promise.all([
-                fetch('iran_full_divisions.json'),
-                fetch('Places.json')
+                fetch('./iran_full_divisions.json'),
+                fetch('./Places.json')
             ]);
 
             if (!divisionsResponse.ok || !categoriesResponse.ok) {
