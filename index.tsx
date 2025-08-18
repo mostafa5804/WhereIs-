@@ -1,4 +1,3 @@
-
 declare var L: any;
 
 const translations = {
@@ -59,6 +58,12 @@ const translations = {
         quick_search_error: "Please select a location first.",
         open: "Open",
         closed: "Closed",
+        directions: "Directions",
+        call: "Call",
+        share: "Share",
+        save: "Save",
+        votes: "votes",
+        phone_not_available: "Phone number not available",
     },
     fa: {
         site_name: "کجاست؟",
@@ -117,6 +122,12 @@ const translations = {
         quick_search_error: "لطفا ابتدا یک مکان را انتخاب کنید.",
         open: "باز",
         closed: "بسته",
+        directions: "مسیرها",
+        call: "تماس",
+        share: "اشتراک‌گذاری",
+        save: "ذخیره",
+        votes: "رأی",
+        phone_not_available: "شماره تلفن موجود نیست",
     },
     ar: {
         site_name: "أين هو؟",
@@ -175,6 +186,12 @@ const translations = {
         quick_search_error: "يرجى تحديد موقع أولاً.",
         open: "مفتوح",
         closed: "مغلق",
+        directions: "الاتجاهات",
+        call: "اتصال",
+        share: "مشاركة",
+        save: "حفظ",
+        votes: "صوت",
+        phone_not_available: "رقم الهاتف غير متوفر",
     },
 };
 
@@ -902,10 +919,12 @@ const initializeApplication = () => {
             return;
         }
 
-        originalResults = resultsWithinProximity.map(r => ({
-            ...r,
-            uid: `${r.location.y}-${r.location.x}`
-        }));
+        originalResults = resultsWithinProximity.map(r => {
+            return {
+                ...r,
+                uid: `${r.location.y}-${r.location.x}`
+            };
+        });
 
         currentResults = [...originalResults];
         
@@ -938,19 +957,21 @@ const initializeApplication = () => {
         resultsList.innerHTML = '';
         for (let i = 0; i < 4; i++) {
             const skeletonCard = document.createElement('div');
-            skeletonCard.className = 'bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border dark:border-gray-700 flex flex-col gap-2';
+            skeletonCard.className = 'bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border dark:border-gray-700 flex flex-col gap-3';
             skeletonCard.innerHTML = `
                 <div class="flex items-start gap-3">
                     <div class="skeleton skeleton-icon"></div>
-                    <div class="flex-grow space-y-2">
+                    <div class="flex-grow space-y-3">
                         <div class="skeleton skeleton-title"></div>
-                        <div class="skeleton skeleton-text"></div>
-                        <div class="skeleton skeleton-text-sm"></div>
+                        <div class="skeleton skeleton-text w-3/4"></div>
+                        <div class="skeleton skeleton-text-sm w-1/2"></div>
                     </div>
                 </div>
-                <div class="flex justify-between items-center mt-2 pt-2 border-t dark:border-gray-700">
-                    <div class="skeleton skeleton-text w-1/3"></div>
-                    <div class="skeleton skeleton-button"></div>
+                <div class="skeleton skeleton-text"></div>
+                <div class="mt-auto pt-3 border-t dark:border-gray-700 flex justify-around">
+                    <div class="skeleton skeleton-button w-16 h-10"></div>
+                    <div class="skeleton skeleton-button w-16 h-10"></div>
+                    <div class="skeleton skeleton-button w-16 h-10"></div>
                 </div>
             `;
             resultsList.appendChild(skeletonCard);
@@ -974,50 +995,106 @@ const initializeApplication = () => {
 
         resultsToDisplay.forEach(result => {
             const card = document.createElement('div');
-            card.className = 'result-card bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border dark:border-gray-700 flex flex-col gap-2';
+            card.className = 'result-card bg-white dark:bg-gray-800 rounded-lg shadow-md border dark:border-gray-700 flex flex-col relative transition-all duration-200 hover:shadow-xl hover:-translate-y-1';
             
             const distance = (result.distance.value / 1000).toFixed(1);
             const categoryName = getCategoryDisplayName(result.type);
             const iconClass = categoryIcons[result.type] || 'fas fa-map-marker-alt';
             
             card.innerHTML = `
-                <div class="flex items-start gap-3">
-                    <div class="bg-light dark:bg-gray-700 p-3 rounded-full flex-shrink-0">
-                        <i class="${iconClass} text-primary dark:text-secondary text-xl"></i>
+                <!-- Bookmark Icon -->
+                <button class="bookmark-btn absolute top-3 right-3 text-gray-400 hover:text-accent text-xl z-10" data-uid="${result.uid}">
+                    <i class="far fa-bookmark"></i>
+                </button>
+
+                <!-- Main Clickable Area -->
+                <div class="details-click-area p-4 cursor-pointer" data-uid="${result.uid}">
+                    <div class="flex items-start gap-3">
+                        <div class="bg-light dark:bg-gray-700 p-3 rounded-full flex-shrink-0">
+                            <i class="${iconClass} text-primary dark:text-secondary text-xl"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <h3 class="font-bold text-dark dark:text-white text-lg truncate">${result.title}</h3>
+                             <div class="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                <p>${categoryName}</p>
+                                <p>${distance} km ${translations[currentLang]['distance_away']}</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="flex-grow min-w-0">
-                         <h3 class="font-bold text-dark dark:text-white text-lg truncate">${result.title}</h3>
-                        <p class="category-name-p text-sm text-gray-500 dark:text-gray-400">${categoryName}</p>
-                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1 truncate">${result.address || ''}</p>
-                    </div>
+
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mt-3 truncate">${result.address || ''}</p>
                 </div>
-                <div class="flex justify-between items-center mt-2 pt-2 border-t dark:border-gray-700">
-                     <p class="text-sm font-semibold text-secondary">${distance} km ${translations[currentLang]['distance_away']}</p>
-                     <div class="flex gap-2">
-                        <button class="details-btn bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-dark dark:text-white font-bold py-2 px-3 rounded-lg transition-colors text-sm" data-uid="${result.uid}">
-                            <i class="fas fa-eye mr-1"></i> ${translations[currentLang]['view_details']}
-                        </button>
-                        <button class="navigate-btn bg-secondary hover:bg-primary text-white font-bold py-2 px-3 rounded-lg transition-colors text-sm" data-lat="${result.location.y}" data-lng="${result.location.x}" data-title="${result.title}">
-                            <i class="fas fa-route mr-1"></i> ${translations[currentLang]['navigate']}
-                        </button>
-                    </div>
+
+                <!-- Action Bar -->
+                <div class="action-bar-container mt-auto p-2 border-t dark:border-gray-700 flex justify-around">
+                    <button class="action-bar-btn navigate-btn" data-lat="${result.location.y}" data-lng="${result.location.x}" data-title="${result.title}">
+                        <i class="fas fa-route"></i>
+                        <span data-translate-key="directions">${translations[currentLang]['directions']}</span>
+                    </button>
+                    <button class="action-bar-btn call-btn" data-uid="${result.uid}" title="${translations[currentLang]['phone_not_available']}" disabled>
+                        <i class="fas fa-phone"></i>
+                        <span data-translate-key="call">${translations[currentLang]['call']}</span>
+                    </button>
+                    <button class="action-bar-btn share-btn" data-uid="${result.uid}">
+                        <i class="fas fa-share-alt"></i>
+                        <span data-translate-key="share">${translations[currentLang]['share']}</span>
+                    </button>
                 </div>
             `;
             resultsList.appendChild(card);
         });
         
+        document.querySelectorAll('.details-click-area').forEach(btn => {
+            btn.addEventListener('click', e => {
+                const uid = (e.currentTarget as HTMLElement).dataset.uid;
+                const result = currentResults.find(r => r.uid === uid);
+                if (result) openDetailsModal(result);
+            });
+        });
+
         document.querySelectorAll('.navigate-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 const target = e.currentTarget as HTMLElement;
                 openNavModal(target.dataset.lat, target.dataset.lng, target.dataset.title);
             });
         });
 
-        document.querySelectorAll('.details-btn').forEach(btn => {
-            btn.addEventListener('click', e => {
+        document.querySelectorAll('.bookmark-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const icon = btn.querySelector('i');
+                if (icon) {
+                    icon.classList.toggle('far'); // empty
+                    icon.classList.toggle('fas'); // filled
+                    icon.classList.toggle('text-accent');
+                }
+            });
+        });
+        
+        document.querySelectorAll('.share-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 const uid = (e.currentTarget as HTMLElement).dataset.uid;
                 const result = currentResults.find(r => r.uid === uid);
-                if (result) openDetailsModal(result);
+                if (result) {
+                    const shareUrl = `https://neshan.org/maps?destination=${result.location.y},${result.location.x}`;
+                    const shareText = `Check out ${result.title} on Neshan Maps!`;
+                     if (navigator.share) {
+                        navigator.share({
+                            title: result.title,
+                            text: shareText,
+                            url: shareUrl,
+                        }).catch(console.error);
+                    } else {
+                        // Fallback for browsers that don't support the Share API
+                        navigator.clipboard.writeText(shareUrl).then(() => {
+                            alert(`Link copied to clipboard: ${shareUrl}`);
+                        }).catch(err => {
+                             alert(`Could not copy link. Here it is: ${shareUrl}`);
+                        });
+                    }
+                }
             });
         });
 
@@ -1067,114 +1144,92 @@ const initializeApplication = () => {
                 <div class="p-6">
                     <h2 class="text-2xl font-bold text-dark dark:text-white">${title}</h2>
                     <p class="text-md text-primary dark:text-secondary mb-3">${categoryName}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-300"><i class="fas fa-map-marker-alt w-5"></i> ${address || 'آدرس نامشخص'}</p>
+                    <p class="text-gray-700 dark:text-gray-300"><i class="fas fa-map-marker-alt w-5 text-center mr-2 text-gray-400"></i>${address || 'Address not available'}</p>
                 </div>
             </div>
         `;
-        document.getElementById('details-modal-close').addEventListener('click', closeDetailsModal);
 
-        // Initialize the map inside the modal with a short delay to ensure the element is in the DOM
-        setTimeout(() => {
-            try {
-                const detailMap = new L.Map('details-map', {
-                    key: NESHAN_WEB_API_KEY,
-                    maptype: isDarkMode ? 'standard-night' : 'dreamy',
-                    poi: false,
-                    traffic: false,
-                    center: [location.y, location.x],
-                    zoom: 15
-                });
-                L.marker([location.y, location.x]).addTo(detailMap);
-            } catch (e) {
-                console.error("Could not initialize detail map:", e);
-                const mapEl = document.getElementById('details-map');
-                if (mapEl) mapEl.innerHTML = `<div class="p-4 text-red-500 text-center">Could not load map.</div>`;
-            }
-        }, 100);
+        document.getElementById('details-modal-close').addEventListener('click', () => detailsModal.classList.add('hidden'));
+
+        try {
+            const detailMap = new L.Map('details-map', {
+                key: NESHAN_WEB_API_KEY,
+                maptype: isDarkMode ? 'standard-night' : 'dreamy',
+                poi: true,
+                traffic: false,
+                center: [location.y, location.x],
+                zoom: 16
+            });
+            L.marker([location.y, location.x]).addTo(detailMap);
+        } catch (e) {
+            console.error("Could not initialize details map:", e);
+            document.getElementById('details-map').innerText = "Could not load map.";
+        }
     };
     
-
-    const closeDetailsModal = () => detailsModal.classList.add('hidden');
-
     // --- EVENT LISTENERS ---
     const setupEventListeners = () => {
         langButtons.forEach(btn => btn.addEventListener('click', (e) => switchLanguage((e.currentTarget as HTMLElement).dataset.lang)));
-        siteNameBtn?.addEventListener('click', () => {
-             showPage(pageLocation);
+        siteNameBtn.addEventListener('click', () => {
+            selectedSubCategories.clear();
+            userLocation = { lat: null, lng: null };
+            showPage(pageLocation);
         });
-        themeToggleBtn?.addEventListener('click', toggleTheme);
-        quickSearchInput?.addEventListener('keypress', (e) => {
+        themeToggleBtn.addEventListener('click', toggleTheme);
+
+        useMyLocationBtn.addEventListener('click', handleUseMyLocation);
+        provinceSelect.addEventListener('change', () => populateCounties(provinceSelect.value));
+        countySelect.addEventListener('change', () => populateCities(provinceSelect.value, countySelect.value));
+        cityVillageSelect.addEventListener('change', updateLocationUI);
+        confirmLocationBtn.addEventListener('click', handleConfirmLocation);
+
+        nextToCategoryBtn.addEventListener('click', goToCategoryPage);
+        backToLocationBtn.addEventListener('click', () => showPage(pageLocation));
+        searchBtn.addEventListener('click', searchPlaces);
+        backToCategoryBtn.addEventListener('click', goToCategoryPage);
+        newSearchBtn.addEventListener('click', () => {
+             selectedSubCategories.clear();
+             showPage(pageLocation)
+        });
+
+        quickSearchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') handleQuickSearch();
         });
-
-
-        // Location Page
-        useMyLocationBtn?.addEventListener('click', handleUseMyLocation);
-        provinceSelect?.addEventListener('change', () => populateCounties(provinceSelect.value));
-        countySelect?.addEventListener('change', () => populateCities(provinceSelect.value, countySelect.value));
-        cityVillageSelect?.addEventListener('change', () => updateLocationUI());
-        confirmLocationBtn?.addEventListener('click', handleConfirmLocation);
-        nextToCategoryBtn?.addEventListener('click', goToCategoryPage);
-
-        // Category Page
-        backToLocationBtn?.addEventListener('click', () => showPage(pageLocation));
-        searchBtn?.addEventListener('click', searchPlaces);
         
-        backToMainCategoriesBtn?.addEventListener('click', () => renderCategoryFilters());
+        backToMainCategoriesBtn.addEventListener('click', () => renderCategoryFilters());
 
-        // Results Page
-        backToCategoryBtn?.addEventListener('click', () => showPage(pageCategory));
-        newSearchBtn?.addEventListener('click', () => {
-             userLocation = { lat: null, lng: null };
-             selectedSubCategories.clear();
-             if(locationMarker && locationMap) locationMap.removeLayer(locationMarker);
-             locationMarker = null;
-             if (locationStatus) locationStatus.textContent = '';
-             if (provinceSelect) {
-                provinceSelect.value = '';
-                populateCounties('');
-             }
-             updateLocationUI();
-             showPage(pageLocation);
-        });
-        
         // Modals
-        navModalClose?.addEventListener('click', closeNavModal);
-        userIconBtn?.addEventListener('click', openLoginModal);
-        loginModalClose?.addEventListener('click', closeLoginModal);
-        registerBtn?.addEventListener('click', () => {
-            if(registerMessage){
-                registerMessage.textContent = translations[currentLang]['register_under_development'];
-                registerMessage.classList.remove('hidden');
-            }
-        });
-
+        userIconBtn.addEventListener('click', openLoginModal);
+        loginModalClose.addEventListener('click', closeLoginModal);
+        navModalClose.addEventListener('click', closeNavModal);
         [navModal, loginModal, detailsModal].forEach(modal => {
-            modal?.addEventListener('click', (e) => {
-                if(e.target === modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
                     modal.classList.add('hidden');
-                    if (modal === loginModal && registerMessage) registerMessage.classList.add('hidden');
+                    if(modal === loginModal) closeLoginModal();
                 }
             });
         });
+        
+        registerBtn.addEventListener('click', () => {
+            registerMessage.textContent = translations[currentLang]['register_under_development'];
+            registerMessage.classList.remove('hidden');
+        });
+
     };
 
     // --- INITIALIZATION ---
-    const init = async () => {
-        const savedTheme = localStorage.getItem('whereis-theme') as 'light' | 'dark' || 'light';
-        applyTheme(savedTheme);
-
-        showPage(pageLocation);
-        switchLanguage('fa');
-        await loadLocationData();
-        await loadCategoryData();
-        setupEventListeners();
-        initializeLocationMap();
-        updateLocationUI();
-        updateCategoryUI();
-    };
-
-    init();
+    showPage(pageLocation);
+    const savedTheme = localStorage.getItem('whereis-theme');
+    applyTheme(savedTheme === 'dark' ? 'dark' : 'light');
+    switchLanguage(currentLang);
+    loadLocationData();
+    loadCategoryData();
+    setupEventListeners();
+    initializeLocationMap();
+    updateLocationUI();
+    updateCategoryUI();
 };
 
-initializeApplication();
+// Start the application once the DOM is ready
+document.addEventListener('DOMContentLoaded', initializeApplication);

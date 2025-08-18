@@ -244,3 +244,54 @@ html[data-theme='dark'] #details-gallery::-webkit-scrollbar-track {
 #details-gallery::-webkit-scrollbar-thumb:hover {
   background: #1E40AF;
 }
+
+/* Custom styles for new result card */
+.action-bar-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem; /* text-xs */
+    font-weight: 500;
+    color: #4B5563; /* text-gray-600 */
+    transition: all 0.2s ease-in-out;
+    flex: 1;
+    padding: 0.5rem 0;
+    border-radius: 0.5rem; /* rounded-lg */
+}
+html[data-theme='dark'] .action-bar-btn {
+    color: #D1D5DB; /* text-gray-300 */
+}
+.action-bar-btn:hover:not(:disabled) {
+    color: #3B82F6; /* secondary */
+    background-color: #EFF6FF; /* light */
+}
+html[data-theme='dark'] .action-bar-btn:hover:not(:disabled) {
+    color: #60A5FA; /* blue-400 */
+    background-color: #374151; /* gray-700 */
+}
+.action-bar-btn i {
+    font-size: 1rem; /* text-base */
+}
+
+.action-bar-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    color: #9CA3AF; /* gray-400 */
+}
+.action-bar-btn:disabled:hover {
+    background-color: transparent;
+    color: #9CA3AF; /* gray-400 */
+}
+html[data-theme='dark'] .action-bar-btn:disabled {
+    color: #6B7280; /* gray-500 */
+}
+html[data-theme='dark'] .action-bar-btn:disabled:hover {
+    color: #6B7280; /* gray-500 */
+}
+
+
+html[dir="rtl"] .bookmark-btn {
+    right: auto;
+    left: 0.75rem; /* top-3 left-3 */
+}
