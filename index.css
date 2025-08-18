@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Vazirmatn:wght@400;500;700&display=swap');
+
+body {
+  /* Default LTR font */
+  font-family: 'Roboto', sans-serif;
+  transition: all 0.3s ease-in-out;
+}
+
+html[dir="rtl"] body {
+  /* RTL font */
+  font-family: 'Vazirmatn', sans-serif;
+}
+
+/* Custom scrollbar for results list */
+#results-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+#results-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+#results-list::-webkit-scrollbar-thumb {
+  background: #3B82F6; /* secondary color */
+  border-radius: 10px;
+}
+
+#results-list::-webkit-scrollbar-thumb:hover {
+  background: #1E40AF; /* primary color */
+}
+
+/* Styles for the category ICON filter */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.category-icon-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 2px solid transparent;
+    border-radius: 0.75rem;
+    background-color: #EFF6FF; /* light */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-align: center;
+    font-weight: 500;
+    color: #1E3A8A; /* dark */
+}
+
+.category-icon-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    background-color: #DBEAFE;
+}
+
+.category-icon-btn i {
+    font-size: 2rem;
+    color: #3B82F6; /* secondary */
+}
+
+/* Style for selected subcategory */
+.category-icon-btn.selected {
+    border-color: #3B82F6; /* secondary */
+    background-color: #DBEAFE;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* Location Selection Page Card Styles */
+.location-card {
+    background-color: white;
+    border-radius: 1rem; /* rounded-xl */
+    padding: 1.5rem; /* p-6 */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); /* shadow-md */
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease-in-out;
+}
+
+.location-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); /* shadow-lg */
+}
+
+.card-icon {
+    font-size: 2.5rem; /* text-4xl */
+    color: #1E40AF; /* primary */
+    text-align: center;
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+.card-title {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 700; /* font-bold */
+    color: #111827; /* dark */
+    text-align: center;
+    margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.card-description {
+    font-size: 0.875rem; /* text-sm */
+    color: #4B5563; /* text-gray-600 */
+    text-align: center;
+    margin-bottom: 1rem; /* mb-4 */
+    flex-grow: 1;
+}
+
+.card-button {
+    width: 100%;
+    background-color: #3B82F6; /* secondary */
+    color: white;
+    font-weight: 700; /* font-bold */
+    padding: 0.75rem 1rem; /* py-3 px-4 */
+    border-radius: 0.5rem; /* rounded-lg */
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-button:hover:not(:disabled) {
+    background-color: #1E40AF; /* primary */
+}
+
+/* Login Modal Styles */
+.login-card {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+}

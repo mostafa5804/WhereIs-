@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhereIs? - Location Finder</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://static.neshan.org/sdk/leaflet/v1.9.4/neshan-sdk/v1.0.8/index.css"/>
+  <script src="https://static.neshan.org/sdk/leaflet/v1.9.4/neshan-sdk/v1.0.8/index.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1E40AF', // A strong, professional blue
+            secondary: '#3B82F6', // A brighter, friendly blue for actions
+            dark: '#111827', // Dark gray for text for better readability
+            light: '#EFF6FF', // A very light blue for backgrounds
+            accent: '#F59E0B', // An accent color for highlights if needed
+          }
+        }
+      }
+    }
+  </script>
+<link rel="stylesheet" href="/index.css">
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+  <div id="app-container" class="container mx-auto p-4 md:p-6">
+    <!-- Header -->
+    <header class="flex justify-between items-center bg-white p-4 rounded-xl shadow-md">
+      <h1 class="text-3xl font-bold text-primary" data-translate-key="site_name">WhereIs?</h1>
+      <div class="flex items-center gap-4">
+        <button id="user-icon-btn" class="text-primary text-2xl">
+            <i class="fas fa-user"></i>
+        </button>
+        <div id="language-switcher" class="flex gap-2 text-sm">
+          <button data-lang="en" class="lang-btn px-3 py-1 rounded-md font-semibold">EN</button>
+          <button data-lang="fa" class="lang-btn px-3 py-1 rounded-md font-semibold">FA</button>
+          <button data-lang="ar" class="lang-btn px-3 py-1 rounded-md font-semibold">AR</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="mt-6">
+      <!-- PAGE 1: LOCATION SELECTION -->
+      <div id="page-location">
+        <h2 class="text-2xl font-bold text-dark mb-6 text-center" data-translate-key="location_selection_title">Step 1: Choose a Location</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Card 1: Use My Location -->
+          <div class="location-card">
+            <i class="fas fa-location-arrow card-icon"></i>
+            <h3 class="card-title" data-translate-key="use_my_location">Use My Current Location</h3>
+            <p class="card-description" data-translate-key="fastest_way_desc">Automatically detect your position using GPS for a quick start.</p>
+            <button id="use-my-location-btn" class="card-button mt-auto">
+              <i class="fas fa-location-arrow mr-2"></i>
+              <span data-translate-key="use_my_location">Use My Current Location</span>
+            </button>
+          </div>
+
+          <!-- Card 2: Select From List -->
+          <div class="location-card">
+            <i class="fas fa-list-ul card-icon"></i>
+            <h3 class="card-title" data-translate-key="select_from_list_title">Select from a List</h3>
+            <p class="card-description" data-translate-key="select_from_list_desc">Browse through provinces, counties, and cities to pinpoint a location.</p>
+            <div class="space-y-3 mt-4 flex-grow">
+              <div>
+                <label for="province-select" class="sr-only" data-translate-key="select_province"></label>
+                <select id="province-select" class="w-full p-2 border rounded-md bg-gray-200 cursor-not-allowed" disabled>
+                  <option value="">--</option>
+                </select>
+              </div>
+              <div>
+                <label for="county-select" class="sr-only" data-translate-key="select_county"></label>
+                <select id="county-select" class="w-full p-2 border rounded-md bg-gray-200 cursor-not-allowed" disabled>
+                  <option value="">--</option>
+                </select>
+              </div>
+              <div>
+                <label for="city-village-select" class="sr-only" data-translate-key="select_city_village"></label>
+                <select id="city-village-select" class="w-full p-2 border rounded-md bg-gray-200 cursor-not-allowed" disabled>
+                  <option value="">--</option>
+                </select>
+              </div>
+            </div>
+            <button id="confirm-location-btn" class="card-button mt-4 disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
+              <i class="fas fa-check mr-2"></i>
+              <span data-translate-key="confirm_location">Confirm Location</span>
+            </button>
+            <p id="location-data-error" class="text-red-500 text-xs mt-2 text-center hidden"></p>
+          </div>
+
+          <!-- Card 3: Select on Map -->
+          <div class="location-card lg:col-span-3 xl:col-span-1">
+            <i class="fas fa-map-marked-alt card-icon"></i>
+            <h3 class="card-title" data-translate-key="select_from_map_title">Select on the Map</h3>
+            <p class="card-description" data-translate-key="pick_on_map_desc">Click directly on the map to choose your exact point of interest.</p>
+             <p id="location-status" class="text-center text-sm text-gray-600 my-2 h-5"></p>
+            <div id="location-map" class="h-full min-h-[250px] bg-gray-200 rounded-lg w-full mt-2 flex-grow">
+               <p class="text-gray-500" data-translate-key="map_view_placeholder">Map will be shown here</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-center mt-8">
+          <button id="next-to-category-btn" class="bg-secondary hover:bg-primary text-white font-bold py-3 px-12 rounded-lg transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed transform disabled:scale-100 hover:scale-105 flex items-center gap-2 text-lg" disabled>
+            <span data-translate-key="next">Next</span>
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- PAGE 2: CATEGORY SELECTION -->
+      <div id="page-category" class="hidden">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold text-dark" data-translate-key="category_selection_title">Step 2: Select a Category</h2>
+                <button id="back-to-main-categories-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors flex items-center gap-2 hidden">
+                    <i class="fas fa-arrow-left"></i>
+                    <span data-translate-key="categories">Categories</span>
+                </button>
+            </div>
+            
+            <div id="main-categories-view">
+                <!-- Main categories icons populated by JS -->
+            </div>
+            <div id="sub-categories-view" class="hidden">
+                 <!-- Sub categories icons populated by JS -->
+            </div>
+
+            <div id="radius-section" class="mt-6 border-t pt-6">
+                <label for="radius-slider" class="block font-medium text-dark" data-translate-key="search_radius">Search Radius</label>
+                <div class="flex items-center gap-4 mt-2">
+                    <input id="radius-slider" type="range" min="1" max="20" value="5" class="w-full h-2 bg-light rounded-lg appearance-none cursor-pointer">
+                    <span id="radius-value" class="font-bold text-primary w-12 text-center">5 km</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-between mt-6">
+          <button id="back-to-location-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg transition-colors flex items-center gap-2">
+            <i class="fas fa-arrow-left"></i>
+            <span data-translate-key="back">Back</span>
+          </button>
+          <button id="search-btn" class="bg-secondary hover:bg-primary text-white font-bold py-3 px-6 rounded-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center gap-2" disabled>
+            <i class="fas fa-search"></i>
+            <span data-translate-key="search">Search</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- PAGE 3: RESULTS -->
+      <div id="page-results" class="hidden">
+        <div class="bg-white p-6 rounded-xl shadow-md min-h-[500px] flex flex-col">
+          <h2 class="text-xl font-bold text-dark mb-4" data-translate-key="results_title">Step 3: Discover Places</h2>
+          <div id="sorting-tabs" class="flex border-b mb-4">
+            <button class="sort-tab-btn flex-1 pb-2 font-semibold" data-translate-key="nearest" data-sort="nearest">Nearest</button>
+            <button class="sort-tab-btn flex-1 pb-2 font-semibold" data-translate-key="best" data-sort="best">Best</button>
+          </div>
+          <div class="flex-grow grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div id="results-list" class="space-y-4 h-[60vh] overflow-y-auto pr-2">
+              <!-- Results populated here -->
+            </div>
+            <div id="results-map" class="h-[60vh] bg-gray-200 rounded-lg">
+              <!-- Results map shown here -->
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-between mt-6">
+            <button id="back-to-category-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg transition-colors flex items-center gap-2">
+              <i class="fas fa-arrow-left"></i>
+              <span data-translate-key="back">Back</span>
+            </button>
+            <button id="new-search-btn" class="bg-secondary hover:bg-primary text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center gap-2">
+                <i class="fas fa-redo"></i>
+                <span data-translate-key="new_search">New Search</span>
+            </button>
+          </div>
+      </div>
+
+    </main>
+  </div>
+  
+  <!-- Navigation Modal -->
+  <div id="nav-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg p-6 w-11/12 max-w-sm text-center">
+        <h3 class="text-lg font-bold mb-4" data-translate-key="navigate_with">Navigate with...</h3>
+        <div class="flex flex-col gap-3">
+            <a id="nav-neshan-link" href="#" target="_blank" class="block w-full bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition-colors" data-translate-key="navigate_neshan">Neshan</a>
+            <a id="nav-google-link" href="#" target="_blank" class="block w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition-colors" data-translate-key="navigate_google">Google Maps</a>
+        </div>
+        <button id="nav-modal-close" class="mt-4 text-gray-600 hover:text-gray-800" data-translate-key="close">Close</button>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg p-8 w-11/12 max-w-sm text-left relative login-card">
+        <button id="login-modal-close" class="absolute top-2 right-4 text-2xl text-gray-500 hover:text-gray-800">&times;</button>
+        <h3 class="text-xl font-bold mb-6 text-dark text-center" data-translate-key="login_title">Login / Register</h3>
+        <form id="login-form" class="space-y-4">
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700" data-translate-key="username">Username</label>
+                <input type="text" id="username" placeholder="Username" class="mt-1 w-full p-3 border rounded-md focus:ring-primary focus:border-primary">
+            </div>
+            <div>
+                 <label for="password" class="block text-sm font-medium text-gray-700" data-translate-key="password">Password</label>
+                <input type="password" id="password" placeholder="Password" class="mt-1 w-full p-3 border rounded-md focus:ring-primary focus:border-primary">
+            </div>
+            <div>
+                 <label for="email" class="block text-sm font-medium text-gray-700" data-translate-key="email">Email Address</label>
+                <input type="email" id="email" placeholder="Email" class="mt-1 w-full p-3 border rounded-md focus:ring-primary focus:border-primary">
+            </div>
+            <div class="flex gap-4 pt-2">
+                <button type="button" class="flex-1 card-button" data-translate-key="login">Login</button>
+                <button type="button" id="register-btn" class="flex-1 bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-300" data-translate-key="register">Register</button>
+            </div>
+            <p id="register-message" class="text-sm text-secondary font-semibold text-center pt-2 hidden"></p>
+        </form>
+    </div>
+  </div>
+
+
+  <script type="module" src="index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
+</body>
+
+</html>

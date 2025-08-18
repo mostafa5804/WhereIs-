@@ -1,0 +1,7 @@
+{
+  "name": "WhereIs? - Advanced Location Finder",
+  "description": "An app to find places like restaurants, cafes, and shops based on location, radius, and categories.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
