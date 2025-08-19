@@ -36,8 +36,8 @@ html[data-theme='dark'] #results-list::-webkit-scrollbar-track {
 /* Styles for the category ICON filter */
 .category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.75rem;
 }
 
 .category-icon-btn {
@@ -46,7 +46,7 @@ html[data-theme='dark'] #results-list::-webkit-scrollbar-track {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 1rem;
+    padding: 0.75rem 0.5rem;
     border: 2px solid transparent;
     border-radius: 0.75rem;
     background-color: #EFF6FF; /* light */
@@ -55,6 +55,8 @@ html[data-theme='dark'] #results-list::-webkit-scrollbar-track {
     text-align: center;
     font-weight: 500;
     color: #1E3A8A; /* dark */
+    font-size: 0.875rem;
+    line-height: 1.25;
 }
 html[data-theme='dark'] .category-icon-btn {
     background-color: #1F2937; /* gray-800 */
@@ -73,7 +75,7 @@ html[data-theme='dark'] .category-icon-btn:hover {
 }
 
 .category-icon-btn i {
-    font-size: 2rem;
+    font-size: 1.75rem;
     color: #3B82F6; /* secondary */
 }
 
@@ -347,4 +349,39 @@ html[data-theme='dark'] .results-tab:hover {
 html[data-theme='dark'] .results-tab.active {
     color: #60A5FA; /* blue-400 */
     border-bottom-color: #60A5FA;
+}
+
+/* New styles for result card image */
+.result-card-image-container {
+    height: 150px;
+    background-color: #e5e7eb; /* gray-200 */
+    border-radius: 0.5rem 0.5rem 0 0; /* rounded-t-lg */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    transition: opacity 0.2s ease-in-out;
+}
+.result-card-image-container:hover {
+    opacity: 0.85;
+}
+html[data-theme='dark'] .result-card-image-container {
+    background-color: #374151; /* gray-700 */
+}
+.result-card-image-container .icon-fallback {
+    font-size: 3rem; /* text-5xl */
+    color: #9ca3af; /* gray-400 */
+}
+html[data-theme='dark'] .result-card-image-container .icon-fallback {
+    color: #6b7280; /* gray-500 */
+}
+
+/* FAQ Accordion Styles */
+.faq-question .fa-chevron-down {
+    transition: transform 0.3s ease;
+}
+.faq-question .rotated {
+    transform: rotate(180deg);
 }

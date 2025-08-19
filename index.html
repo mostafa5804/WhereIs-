@@ -251,6 +251,15 @@
       </div>
 
     </main>
+    
+    <!-- Footer -->
+    <footer class="text-center p-4 mt-4 text-sm text-gray-500 dark:text-gray-400 border-t dark:border-gray-700">
+      <div class="flex justify-center items-center gap-4">
+        <button id="about-us-btn" class="hover:text-secondary dark:hover:text-secondary transition-colors" data-translate-key="about_us">About Us</button>
+        <span class="text-gray-300 dark:text-gray-600">|</span>
+        <button id="faq-btn" class="hover:text-secondary dark:hover:text-secondary transition-colors" data-translate-key="faq">FAQ</button>
+      </div>
+    </footer>
   </div>
   
   <!-- Navigation Modal -->
@@ -300,6 +309,65 @@
             </div>
             <p id="register-message" class="text-sm text-secondary font-semibold text-center pt-2 hidden"></p>
         </form>
+    </div>
+  </div>
+
+  <!-- Image Gallery Modal -->
+  <div id="image-gallery-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden">
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-4 w-11/12 max-w-2xl text-center relative transform transition-all">
+          <button id="gallery-modal-close" class="absolute top-2 right-4 text-3xl text-gray-300 hover:text-white">&times;</button>
+          <div id="gallery-content" class="flex items-center justify-center h-96">
+              <p class="text-gray-600 dark:text-gray-300" data-translate-key="no_images_available">No images available for this location.</p>
+          </div>
+      </div>
+  </div>
+
+  <!-- About Us Modal -->
+  <div id="about-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 w-11/12 max-w-sm text-center relative">
+      <button id="about-modal-close" class="absolute top-2 right-4 text-2xl text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white">&times;</button>
+      <h3 class="text-xl font-bold text-dark dark:text-white mb-4" data-translate-key="about_us">About Us</h3>
+      <p class="text-gray-700 dark:text-gray-300" data-translate-key="about_us_text">ساخته شده توسط مصطفی با کمک هوش مصنوعی❤️</p>
+    </div>
+  </div>
+
+  <!-- FAQ Modal -->
+  <div id="faq-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 w-11/12 max-w-lg relative">
+      <button id="faq-modal-close" class="absolute top-3 right-5 text-2xl text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white">&times;</button>
+      <h3 class="text-xl font-bold text-dark dark:text-white mb-6 text-center" data-translate-key="faq">Frequently Asked Questions</h3>
+      <div id="faq-accordion" class="space-y-3">
+        <!-- FAQ Item 1 -->
+        <div class="faq-item border-b dark:border-gray-700 pb-2">
+          <button class="faq-question flex justify-between items-center w-full text-left font-semibold text-dark dark:text-white py-2">
+            <span data-translate-key="faq_q1">How do I select a location?</span>
+            <i class="fas fa-chevron-down transition-transform"></i>
+          </button>
+          <div class="faq-answer hidden mt-2 px-2 text-gray-600 dark:text-gray-300">
+            <p data-translate-key="faq_a1">You have three options on the first page: use your device's GPS for your current location, click anywhere on the interactive map, or select your province, county, and city from the dropdown lists.</p>
+          </div>
+        </div>
+        <!-- FAQ Item 2 -->
+        <div class="faq-item border-b dark:border-gray-700 pb-2">
+          <button class="faq-question flex justify-between items-center w-full text-left font-semibold text-dark dark:text-white py-2">
+            <span data-translate-key="faq_q2">Is this service free to use?</span>
+            <i class="fas fa-chevron-down transition-transform"></i>
+          </button>
+          <div class="faq-answer hidden mt-2 px-2 text-gray-600 dark:text-gray-300">
+            <p data-translate-key="faq_a2">Yes, WhereIs? is completely free for all users.</p>
+          </div>
+        </div>
+        <!-- FAQ Item 3 -->
+        <div class="faq-item border-b dark:border-gray-700 pb-2">
+          <button class="faq-question flex justify-between items-center w-full text-left font-semibold text-dark dark:text-white py-2">
+            <span data-translate-key="faq_q3">What map service do you use?</span>
+            <i class="fas fa-chevron-down transition-transform"></i>
+          </button>
+          <div class="faq-answer hidden mt-2 px-2 text-gray-600 dark:text-gray-300">
+            <p data-translate-key="faq_a3">This application is powered by the Neshan Maps API for all location, mapping, and search functionalities.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
