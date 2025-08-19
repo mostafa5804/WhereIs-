@@ -1,3 +1,4 @@
+
 declare var L: any;
 
 const translations = {
@@ -69,13 +70,17 @@ const translations = {
         or_divider: "OR",
         about_us: "About Us",
         faq: "FAQ",
-        about_us_text: "Made by Mustafa with the help of AI ❤️",
-        faq_q1: "How do I select a location?",
-        faq_a1: "You have three options on the first page: use your device's GPS for your current location, click anywhere on the interactive map, or select your province, county, and city from the dropdown lists.",
-        faq_q2: "Is this service free to use?",
-        faq_a2: "Yes, WhereIs? is completely free for all users.",
-        faq_q3: "What map service do you use?",
-        faq_a3: "This application is powered by the Neshan Maps API for all location, mapping, and search functionalities.",
+        about_us_text: "Welcome to WhereIs?! Our mission is to make finding local spots simple, fast, and intuitive. Whether you're looking for the nearest coffee shop, a top-rated restaurant, or a quiet park, we've got you covered. With WhereIs?, you can instantly discover places around you using your device's GPS, pinpoint a specific area by clicking on our interactive map, or browse through a comprehensive list of cities and towns. We're here to help you explore your world, one great place at a time!",
+        faq_q1: "How do I perform a search?",
+        faq_a1: "After selecting a location on the first page, you can either type what you're looking for (e.g., \"pizza\") in the search bar or browse through the categories. Click the \"Search\" button to see the results.",
+        faq_q2: "Can I search in a different city?",
+        faq_a2: "Yes! On the location page, either click any point on the map or use the \"Select from a List\" option to choose a different city before starting your search.",
+        faq_q3: "Why do some results seem far away?",
+        faq_a3: "We search within a 25km radius. While results are initially sorted by distance, you can switch to the \"Best\" tab to see top-rated places, which might be further away.",
+        faq_q4: "Is my location data saved?",
+        faq_a4: "Your privacy is our priority. Your location is only used for the current search session and is not stored on our servers.",
+        faq_q5: "What features are planned for the future?",
+        faq_a5: "We're working on adding user reviews, the ability to save favorite locations, and providing more detailed place information. Stay tuned for updates!",
         no_images_available: "No images available for this location.",
     },
     fa: {
@@ -146,13 +151,17 @@ const translations = {
         or_divider: "یا",
         about_us: "درباره ما",
         faq: "سوالات متداول",
-        about_us_text: "ساخته شده توسط مصطفی با کمک هوش مصنوعی ❤️",
-        faq_q1: "چگونه یک مکان را انتخاب کنم؟",
-        faq_a1: "شما سه گزینه در صفحه اول دارید: از GPS دستگاه خود برای مکان فعلی استفاده کنید، روی هر نقطه از نقشه تعاملی کلیک کنید، یا استان، شهرستان و شهر خود را از لیست‌های کشویی انتخاب کنید.",
-        faq_q2: "آیا این سرویس رایگان است؟",
-        faq_a2: "بله، استفاده از کجاست؟ برای همه کاربران کاملاً رایگان است.",
-        faq_q3: "از چه سرویس نقشه‌ای استفاده می‌کنید؟",
-        faq_a3: "این برنامه برای تمام قابلیت‌های مکانی، نقشه‌برداری و جستجو از API نقشه نشان استفاده می‌کند.",
+        about_us_text: "به کجاست؟ خوش آمدید! ماموریت ما این است که پیدا کردن مکان‌های محلی را ساده، سریع و آسان کنیم. چه به دنبال نزدیک‌ترین کافی‌شاپ باشید، چه یک رستوران با امتیاز بالا یا یک پارک دنج، ما شما را پوشش می‌دهیم. با کجاست؟ می‌توانید فوراً مکان‌های اطراف خود را با استفاده از GPS دستگاهتان پیدا کنید، با کلیک روی نقشه تعاملی ما منطقه خاصی را مشخص کنید، یا از طریق لیست جامع شهرها و شهرستان‌ها جستجو کنید. ما اینجا هستیم تا به شما کمک کنیم دنیای خود را کشف کنید، هر بار یک مکان عالی!",
+        faq_q1: "چگونه جستجو کنم؟",
+        faq_a1: "پس از انتخاب مکان در صفحه اول، می‌توانید چیزی که به دنبال آن هستید (مثلاً \"پیتزا\") را در نوار جستجو تایپ کنید یا دسته‌بندی‌ها را مرور کنید. برای دیدن نتایج، روی دکمه \"جستجو\" کلیک کنید.",
+        faq_q2: "آیا می‌توانم در شهر دیگری جستجو کنم؟",
+        faq_a2: "بله! در صفحه مکان، یا روی هر نقطه‌ای از نقشه کلیک کنید یا از گزینه \"انتخاب از لیست\" برای انتخاب یک شهر دیگر قبل از شروع جستجو استفاده کنید.",
+        faq_q3: "چرا برخی نتایج دور به نظر می‌رسند؟",
+        faq_a3: "ما در شعاع ۲۵ کیلومتری جستجو می‌کنیم. در حالی که نتایج ابتدا بر اساس فاصله مرتب شده‌اند، می‌توانید به تب \"بهترین\" بروید تا مکان‌های دارای بالاترین امتیاز را ببینید که ممکن است کمی دورتر باشند.",
+        faq_q4: "آیا اطلاعات موقعیت مکانی من ذخیره می‌شود؟",
+        faq_a4: "حریم خصوصی شما اولویت ماست. موقعیت مکانی شما فقط برای جلسه جستجوی فعلی استفاده می‌شود و روی سرورهای ما ذخیره نمی‌گردد.",
+        faq_q5: "چه ویژگی‌هایی برای آینده برنامه‌ریزی شده است؟",
+        faq_a5: "ما در حال کار بر روی افزودن نظرات کاربران، قابلیت ذخیره مکان‌های مورد علاقه و ارائه اطلاعات دقیق‌تر برای هر مکان هستیم. منتظر به‌روزرسانی‌ها باشید!",
         no_images_available: "تصویری برای این مکان موجود نیست.",
     },
     ar: {
@@ -223,13 +232,17 @@ const translations = {
         or_divider: "أو",
         about_us: "معلومات عنا",
         faq: "الأسئلة الشائعة",
-        about_us_text: "صنع بواسطة مصطفى بمساعدة الذكاء الاصطناعي ❤️",
-        faq_q1: "كيف أختار موقعًا؟",
-        faq_a1: "لديك ثلاثة خيارات في الصفحة الأولى: استخدم GPS جهازك لموقعك الحالي، انقر في أي مكان على الخريطة التفاعلية، أو اختر محافظتك، مقاطعتك، ومدينتك من القوائم المنسدلة.",
-        faq_q2: "هل هذه الخدمة مجانية؟",
-        faq_a2: "نعم، أين هو؟ مجاني تمامًا لجميع المستخدمين.",
-        faq_q3: "ما هي خدمة الخرائط التي تستخدمونها؟",
-        faq_a3: "هذا التطبيق مدعوم بواجهة برمجة تطبيقات خرائط نشان لجميع وظائف الموقع ورسم الخرائط والبحث.",
+        about_us_text: "أهلاً بك في 'أين هو؟'! مهمتنا هي جعل العثور على الأماكن المحلية بسيطًا وسريعًا وسهلًا. سواء كنت تبحث عن أقرب مقهى، أو مطعم عالي التقييم، أو حديقة هادئة، فنحن نوفر لك كل ما تحتاجه. مع 'أين هو؟'، يمكنك اكتشاف الأماكن من حولك فورًا باستخدام نظام تحديد المواقع العالمي (GPS) في جهازك، أو تحديد منطقة معينة بالنقر على خريطتنا التفاعلية، أو التصفح عبر قائمة شاملة من المدن والبلدات. نحن هنا لمساعدتك على استكشاف عالمك، مكانًا رائعًا في كل مرة!",
+        faq_q1: "كيف أقوم بالبحث؟",
+        faq_a1: "بعد تحديد موقعك في الصفحة الأولى، يمكنك إما كتابة ما تبحث عنه (مثل \"بيتزا\") في شريط البحث أو تصفح الفئات. انقر على زر \"بحث\" لرؤية النتائج.",
+        faq_q2: "هل يمكنني البحث في مدينة مختلفة؟",
+        faq_a2: "نعم! في صفحة الموقع، يمكنك إما النقر على أي نقطة على الخريطة أو استخدام خيار \"اختر من القائمة\" لاختيار مدينة مختلفة قبل بدء البحث.",
+        faq_q3: "لماذا تبدو بعض النتائج بعيدة؟",
+        faq_a3: "نحن نبحث ضمن دائرة نصف قطرها 25 كيلومترًا. بينما يتم فرز النتائج في البداية حسب المسافة، يمكنك التبديل إلى علامة التبويب \"الأفضل\" لرؤية الأماكن الأعلى تقييمًا، والتي قد تكون أبعد قليلاً.",
+        faq_q4: "هل يتم حفظ بيانات موقعي؟",
+        faq_a4: "خصوصيتك هي أولويتنا. يتم استخدام موقعك فقط لجلسة البحث الحالية ولا يتم تخزينه على خوادمنا.",
+        faq_q5: "ما هي الميزات المخطط لها في المستقبل؟",
+        faq_a5: "نحن نعمل على إضافة تقييمات المستخدمين، والقدرة على حفظ الأماكن المفضلة، وتوفير معلومات أكثر تفصيلاً عن كل مكان. ترقبوا التحديثات!",
         no_images_available: "لا توجد صور متاحة لهذا الموقع.",
     },
 };
@@ -268,6 +281,7 @@ const categoryIcons = {
     "hostel": "fas fa-building",
     "campground": "fas fa-campground",
     "gas_station": "fas fa-gas-pump",
+    "fuel": "fas fa-gas-pump",
     "parking": "fas fa-parking",
     "car_repair": "fas fa-tools",
     "car_dealer": "fas fa-car-side",
@@ -315,6 +329,8 @@ const categoryIcons = {
     "embassy": "fas fa-flag",
     "military_base": "fas fa-shield-halved",
     "fire_station": "fas fa-fire-extinguisher",
+    "shop": "fas fa-store",
+    "food": "fas fa-utensils",
 };
 
 
@@ -330,7 +346,7 @@ const initializeApplication = async () => {
     let resultMarkersMap = new Map<string, any>();
     let highlightedMarkerInfo: { marker: any; originalIcon: any } | null = null;
     let isochroneLayer: any = null;
-    let selectedSubCategories = new Set<string>();
+    let selectedSubCategory: string | null = null;
     let currentResults: any[] = [];
     let originalResults: any[] = [];
     let isDarkMode = false;
@@ -350,7 +366,6 @@ const initializeApplication = async () => {
     const provinceSelect = document.getElementById('province-select') as HTMLSelectElement;
     const countySelect = document.getElementById('county-select') as HTMLSelectElement;
     const cityVillageSelect = document.getElementById('city-village-select') as HTMLSelectElement;
-    const confirmLocationBtn = document.getElementById('confirm-location-btn') as HTMLButtonElement;
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const quickSearchInput = document.getElementById('quick-search-input') as HTMLInputElement;
     const quickSearchError = document.getElementById('quick-search-error');
@@ -446,14 +461,10 @@ const initializeApplication = async () => {
         if (nextToCategoryBtn) {
             nextToCategoryBtn.disabled = !hasLocation;
         }
-        const citySelected = cityVillageSelect && cityVillageSelect.value !== '';
-        if (confirmLocationBtn) {
-            confirmLocationBtn.disabled = !citySelected;
-        }
     };
     
     const updateCategoryUI = () => {
-        searchBtn.disabled = selectedSubCategories.size === 0 && quickSearchInput.value.trim() === '';
+        searchBtn.disabled = selectedSubCategory === null && quickSearchInput.value.trim() === '';
     };
 
     const goToCategoryPage = () => {
@@ -722,7 +733,7 @@ const initializeApplication = async () => {
         const address = `${province}, ${county}, ${city}`;
         setStatus('getting_location');
         try {
-            const response = await fetch(`https://api.neshan.org/v1/geocoding?address=${encodeURIComponent(address)}`, {
+            const response = await fetch(`https://api.neshan.org/v6/geocoding?address=${encodeURIComponent(address)}`, {
                 headers: { 'Api-Key': NESHAN_SERVICE_API_KEY }
             });
             const data = await response.json();
@@ -730,7 +741,6 @@ const initializeApplication = async () => {
                 userLocation = { lat: data.location.y, lng: data.location.x };
                 updateLocationMarker(userLocation.lat, userLocation.lng);
                 setStatus('location_from_dropdown');
-                updateLocationUI();
             } else {
                 setStatus('location_not_found', true);
                 userLocation = { lat: null, lng: null };
@@ -740,15 +750,6 @@ const initializeApplication = async () => {
             userLocation = { lat: null, lng: null };
         }
         updateLocationUI();
-    };
-
-    const handleConfirmLocation = () => {
-        const province = provinceSelect.options[provinceSelect.selectedIndex].text;
-        const county = countySelect.options[countySelect.selectedIndex].text;
-        const city = cityVillageSelect.value;
-        if(city) {
-            geocodeCity(province, county, city);
-        }
     };
 
     // --- DATA LOADING & POPULATION ---
@@ -861,7 +862,7 @@ const initializeApplication = async () => {
                     btn.dataset.subcategoryEn = item.en;
                     btn.dataset.subcategoryFa = item.fa;
 
-                    if (selectedSubCategories.has(item.en)) {
+                    if (selectedSubCategory === item.en) {
                         btn.classList.add('selected');
                     }
                     
@@ -870,12 +871,23 @@ const initializeApplication = async () => {
                     
                     btn.innerHTML = `<i class="${iconClass}"></i><span>${iconName}</span>`;
                     btn.onclick = () => {
-                        btn.classList.toggle('selected');
-                        if (selectedSubCategories.has(item.en)) {
-                            selectedSubCategories.delete(item.en);
+                         // If the clicked button is already selected, deselect it.
+                        if (selectedSubCategory === item.en) {
+                            selectedSubCategory = null;
                         } else {
-                            selectedSubCategories.add(item.en);
+                            selectedSubCategory = item.en;
                         }
+
+                        // Update UI for all buttons in the current view
+                        const allButtons = subCategoriesView.querySelectorAll<HTMLButtonElement>('.category-icon-btn');
+                        allButtons.forEach(button => {
+                            if (button.dataset.subcategoryEn === selectedSubCategory) {
+                                button.classList.add('selected');
+                            } else {
+                                button.classList.remove('selected');
+                            }
+                        });
+                        
                         updateCategoryUI();
                     };
                     grid.appendChild(btn);
@@ -890,7 +902,10 @@ const initializeApplication = async () => {
         renderSkeletons();
         initializeResultsMap();
 
-        const searchTerms = new Set(selectedSubCategories);
+        const searchTerms = new Set<string>();
+        if (selectedSubCategory) {
+            searchTerms.add(selectedSubCategory);
+        }
         const quickSearchTerm = quickSearchInput.value.trim();
         if(quickSearchTerm) {
             searchTerms.add(quickSearchTerm);
@@ -1039,7 +1054,7 @@ const initializeApplication = async () => {
     
     const handleQuickSearch = () => {
         const term = quickSearchInput.value.trim();
-        if (!term && selectedSubCategories.size === 0) return;
+        if (!term && !selectedSubCategory) return;
 
         if (userLocation.lat === null || userLocation.lng === null) {
             quickSearchError.textContent = translations[currentLang]['quick_search_error'];
@@ -1111,6 +1126,7 @@ const initializeApplication = async () => {
         }
 
         resultsToDisplay.forEach(result => {
+            console.log('API Result Type:', result.type);
             const card = document.createElement('div');
             card.className = 'result-card bg-white dark:bg-gray-800 rounded-lg shadow-md border dark:border-gray-700 flex flex-col relative transition-all duration-200 hover:shadow-xl hover:-translate-y-1';
             card.dataset.uid = result.uid;
@@ -1166,7 +1182,11 @@ const initializeApplication = async () => {
 
             card.querySelector('.result-card-image-container').addEventListener('click', () => {
                 if (galleryContent) {
-                    galleryContent.innerHTML = `<p class="text-gray-600 dark:text-gray-300" data-translate-key="no_images_available">${translations[currentLang]['no_images_available']}</p>`;
+                    galleryContent.innerHTML = `
+                        <div class="flex flex-col items-center justify-center h-full">
+                            <i class="${iconClass} text-8xl text-gray-400 dark:text-gray-500"></i>
+                            <p class="mt-4 text-gray-600 dark:text-gray-300" data-translate-key="no_images_available">${translations[currentLang]['no_images_available']}</p>
+                        </div>`;
                 }
                 imageGalleryModal?.classList.remove('hidden');
             });
@@ -1187,7 +1207,12 @@ const initializeApplication = async () => {
                             title: result.title,
                             text: shareText,
                             url: shareUrl,
-                        }).catch(console.error);
+                        }).catch((error) => {
+                            // Silently ignore AbortError which happens when the user cancels the share dialog.
+                            if (error.name !== 'AbortError') {
+                                console.error('Error sharing:', error);
+                            }
+                        });
                     } else {
                         // Fallback for browsers that don't support the Share API
                         navigator.clipboard.writeText(shareUrl).then(() => {
@@ -1243,7 +1268,7 @@ const initializeApplication = async () => {
     backToCategoryBtn?.addEventListener('click', () => showPage(pageCategory));
     newSearchBtn?.addEventListener('click', () => {
         userLocation = { lat: null, lng: null };
-        selectedSubCategories.clear();
+        selectedSubCategory = null;
         quickSearchInput.value = '';
         if (locationStatus) locationStatus.textContent = '';
         if (locationMarker && locationMap) locationMap.removeLayer(locationMarker);
@@ -1258,12 +1283,23 @@ const initializeApplication = async () => {
     provinceSelect?.addEventListener('change', () => populateCounties(provinceSelect.value));
     countySelect?.addEventListener('change', () => populateCities(provinceSelect.value, countySelect.value));
     cityVillageSelect?.addEventListener('change', () => {
-        updateLocationUI();
-        if (cityVillageSelect.value) {
-            handleConfirmLocation();
+        const province = provinceSelect.options[provinceSelect.selectedIndex].text;
+        const county = countySelect.options[countySelect.selectedIndex].text;
+        const city = cityVillageSelect.value;
+        if (city) {
+            geocodeCity(province, county, city);
+        } else {
+            // User selected the placeholder, clear the location
+            userLocation = { lat: null, lng: null };
+            if (locationMarker && locationMap) {
+                locationMap.removeLayer(locationMarker);
+                locationMarker = null;
+            }
+            if (locationStatus) locationStatus.textContent = '';
+            // Manually call updateLocationUI to disable the 'Next' button
+            updateLocationUI();
         }
     });
-    confirmLocationBtn?.addEventListener('click', handleConfirmLocation);
     quickSearchInput?.addEventListener('input', updateCategoryUI);
     quickSearchInput?.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !searchBtn.disabled) {

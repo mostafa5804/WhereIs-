@@ -151,10 +151,6 @@
                 </select>
               </div>
             </div>
-            <button id="confirm-location-btn" class="card-button mt-4 disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
-              <i class="fas fa-check mr-2"></i>
-              <span data-translate-key="confirm_location">Confirm Location</span>
-            </button>
             <p id="location-data-error" class="text-red-500 text-xs mt-2 text-center hidden"></p>
           </div>
 
@@ -327,7 +323,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 w-11/12 max-w-sm text-center relative">
       <button id="about-modal-close" class="absolute top-2 right-4 text-2xl text-gray-400 dark:text-gray-300 hover:text-gray-600 dark:hover:text-white">&times;</button>
       <h3 class="text-xl font-bold text-dark dark:text-white mb-4" data-translate-key="about_us">About Us</h3>
-      <p class="text-gray-700 dark:text-gray-300" data-translate-key="about_us_text">ساخته شده توسط مصطفی با کمک هوش مصنوعی❤️</p>
+      <p class="text-gray-700 dark:text-gray-300 text-left" data-translate-key="about_us_text">Made by Mustafa with the help of AI ❤️</p>
     </div>
   </div>
 
@@ -340,31 +336,51 @@
         <!-- FAQ Item 1 -->
         <div class="faq-item border-b dark:border-gray-700 pb-2">
           <button class="faq-question flex justify-between items-center w-full text-left font-semibold text-dark dark:text-white py-2">
-            <span data-translate-key="faq_q1">How do I select a location?</span>
+            <span data-translate-key="faq_q1">How do I perform a search?</span>
             <i class="fas fa-chevron-down transition-transform"></i>
           </button>
           <div class="faq-answer hidden mt-2 px-2 text-gray-600 dark:text-gray-300">
-            <p data-translate-key="faq_a1">You have three options on the first page: use your device's GPS for your current location, click anywhere on the interactive map, or select your province, county, and city from the dropdown lists.</p>
+            <p data-translate-key="faq_a1">After selecting a location on the first page, you can either type what you're looking for (e.g., "pizza") in the search bar or browse through the categories. Click the "Search" button to see the results.</p>
           </div>
         </div>
         <!-- FAQ Item 2 -->
         <div class="faq-item border-b dark:border-gray-700 pb-2">
           <button class="faq-question flex justify-between items-center w-full text-left font-semibold text-dark dark:text-white py-2">
-            <span data-translate-key="faq_q2">Is this service free to use?</span>
+            <span data-translate-key="faq_q2">Can I search in a different city?</span>
             <i class="fas fa-chevron-down transition-transform"></i>
           </button>
           <div class="faq-answer hidden mt-2 px-2 text-gray-600 dark:text-gray-300">
-            <p data-translate-key="faq_a2">Yes, WhereIs? is completely free for all users.</p>
+            <p data-translate-key="faq_a2">Yes! On the location page, either click any point on the map or use the "Select from a List" option to choose a different city before starting your search.</p>
           </div>
         </div>
         <!-- FAQ Item 3 -->
         <div class="faq-item border-b dark:border-gray-700 pb-2">
           <button class="faq-question flex justify-between items-center w-full text-left font-semibold text-dark dark:text-white py-2">
-            <span data-translate-key="faq_q3">What map service do you use?</span>
+            <span data-translate-key="faq_q3">Why do some results seem far away?</span>
             <i class="fas fa-chevron-down transition-transform"></i>
           </button>
           <div class="faq-answer hidden mt-2 px-2 text-gray-600 dark:text-gray-300">
-            <p data-translate-key="faq_a3">This application is powered by the Neshan Maps API for all location, mapping, and search functionalities.</p>
+            <p data-translate-key="faq_a3">We search within a 25km radius. While results are initially sorted by distance, you can switch to the "Best" tab to see top-rated places, which might be further away.</p>
+          </div>
+        </div>
+        <!-- FAQ Item 4 -->
+        <div class="faq-item border-b dark:border-gray-700 pb-2">
+          <button class="faq-question flex justify-between items-center w-full text-left font-semibold text-dark dark:text-white py-2">
+            <span data-translate-key="faq_q4">Is my location data saved?</span>
+            <i class="fas fa-chevron-down transition-transform"></i>
+          </button>
+          <div class="faq-answer hidden mt-2 px-2 text-gray-600 dark:text-gray-300">
+            <p data-translate-key="faq_a4">Your privacy is our priority. Your location is only used for the current search session and is not stored on our servers.</p>
+          </div>
+        </div>
+        <!-- FAQ Item 5 -->
+        <div class="faq-item border-b dark:border-gray-700 pb-2">
+          <button class="faq-question flex justify-between items-center w-full text-left font-semibold text-dark dark:text-white py-2">
+            <span data-translate-key="faq_q5">What features are planned for the future?</span>
+            <i class="fas fa-chevron-down transition-transform"></i>
+          </button>
+          <div class="faq-answer hidden mt-2 px-2 text-gray-600 dark:text-gray-300">
+            <p data-translate-key="faq_a5">We're working on adding user reviews, the ability to save favorite locations, and providing more detailed place information. Stay tuned for updates!</p>
           </div>
         </div>
       </div>
