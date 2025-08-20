@@ -223,6 +223,7 @@ input[type=number] {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 0.25rem;
     font-size: 0.75rem; /* text-xs */
     font-weight: 500;
@@ -353,22 +354,11 @@ html[data-theme='dark'] .results-tab.active {
 
 /* New styles for result card image */
 .result-card-image-container {
-    height: 150px;
-    background-color: #e5e7eb; /* gray-200 */
-    border-radius: 0.5rem 0.5rem 0 0; /* rounded-t-lg */
-    display: flex;
-    align-items: center;
-    justify-content: center;
     cursor: pointer;
-    overflow: hidden;
-    position: relative;
     transition: opacity 0.2s ease-in-out;
 }
 .result-card-image-container:hover {
     opacity: 0.85;
-}
-html[data-theme='dark'] .result-card-image-container {
-    background-color: #374151; /* gray-700 */
 }
 .result-card-image-container .icon-fallback {
     font-size: 3rem; /* text-5xl */

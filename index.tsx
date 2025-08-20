@@ -1126,9 +1126,8 @@ const initializeApplication = async () => {
         }
 
         resultsToDisplay.forEach(result => {
-            console.log('API Result Type:', result.type);
             const card = document.createElement('div');
-            card.className = 'result-card bg-white dark:bg-gray-800 rounded-lg shadow-md border dark:border-gray-700 flex flex-col relative transition-all duration-200 hover:shadow-xl hover:-translate-y-1';
+            card.className = 'result-card bg-white dark:bg-gray-800 rounded-lg shadow-md border dark:border-gray-700 flex flex-col overflow-hidden h-60 transition-all duration-200 hover:shadow-xl hover:-translate-y-1';
             card.dataset.uid = result.uid;
 
             const distance = (result.distance.value / 1000).toFixed(1);
@@ -1136,29 +1135,25 @@ const initializeApplication = async () => {
             const iconClass = categoryIcons[result.type] || 'fas fa-map-marker-alt';
             
             card.innerHTML = `
-                <div class="result-card-image-container">
-                    <i class="${iconClass} icon-fallback"></i>
-                </div>
-                <!-- Main Content Area -->
-                <div class="p-4 flex-grow cursor-pointer" data-action="highlight">
-                    <div class="flex items-start gap-3">
-                        <div class="bg-light dark:bg-gray-700 p-3 rounded-full flex-shrink-0">
-                            <i class="${iconClass} text-primary dark:text-secondary text-xl"></i>
-                        </div>
-                        <div class="flex-grow">
-                            <h3 class="font-bold text-dark dark:text-white text-lg truncate">${result.title}</h3>
-                             <div class="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                <p>${categoryName}</p>
-                                <p>${distance} km ${translations[currentLang]['distance_away']}</p>
-                            </div>
+                <!-- Top Row (80%) -->
+                <div class="flex h-4/5 cursor-pointer" data-action="highlight">
+                    <!-- Left Column: Info (60%) -->
+                    <div class="w-3/5 p-4 flex flex-col overflow-hidden">
+                        <h3 class="font-bold text-dark dark:text-white text-lg truncate flex-shrink-0">${result.title}</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 flex-shrink-0">${categoryName}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-3 flex-grow">${result.address || ''}</p>
+                        <div class="mt-auto flex-shrink-0 pt-2">
+                            <p class="text-sm font-medium text-primary dark:text-secondary">${distance} km ${translations[currentLang]['distance_away']}</p>
                         </div>
                     </div>
-
-                    <p class="text-sm text-gray-600 dark:text-gray-300 mt-3 truncate">${result.address || ''}</p>
+                    <!-- Right Column: Image (40%) -->
+                    <div class="w-2/5 bg-gray-200 dark:bg-gray-700 flex items-center justify-center result-card-image-container" data-action="open-gallery">
+                        <i class="${iconClass} icon-fallback"></i>
+                    </div>
                 </div>
-
-                <!-- Action Bar -->
-                <div class="action-bar-container mt-auto p-2 border-t dark:border-gray-700 flex justify-around items-center">
+                
+                <!-- Bottom Row: Actions (20%) -->
+                <div class="flex h-1/5 border-t dark:border-gray-700 flex-shrink-0">
                     <button class="action-bar-btn navigate-btn" data-lat="${result.location.y}" data-lng="${result.location.x}" data-title="${result.title}">
                         <i class="fas fa-route"></i>
                         <span data-translate-key="directions">${translations[currentLang]['directions']}</span>
@@ -1180,7 +1175,8 @@ const initializeApplication = async () => {
                 if(uid) highlightResultOnMap(uid);
             });
 
-            card.querySelector('.result-card-image-container').addEventListener('click', () => {
+            card.querySelector('[data-action="open-gallery"]').addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent highlight click from firing
                 if (galleryContent) {
                     galleryContent.innerHTML = `
                         <div class="flex flex-col items-center justify-center h-full">

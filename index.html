@@ -214,23 +214,31 @@
 
       <!-- PAGE 3: RESULTS -->
       <div id="page-results" class="hidden">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md pb-20 flex flex-col h-[calc(100vh-8rem)]">
-          <h2 class="text-xl font-bold text-dark dark:text-white mb-4" data-translate-key="results_title">Step 3: Discover Places</h2>
+        <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded-xl shadow-md pb-20 flex flex-col h-[calc(100vh-8rem)]">
+          <h2 class="text-xl font-bold text-dark dark:text-white mb-4 flex-shrink-0" data-translate-key="results_title">Step 3: Discover Places</h2>
           
-          <!-- Map Container -->
-          <div id="results-map" class="h-[40%] flex-shrink-0 bg-gray-200 dark:bg-gray-700 rounded-lg">
+          <!-- Wrapper for two-column layout -->
+          <div class="flex-grow flex flex-col md:flex-row gap-6 overflow-hidden">
+            
+            <!-- Left column (list) -->
+            <div class="flex flex-col w-full md:w-2/5 lg:w-1/3 order-2 md:order-1 h-1/2 md:h-full">
+              <!-- Tabs -->
+              <div id="results-tabs" class="flex-shrink-0 flex border-b dark:border-gray-700">
+                <button id="sort-nearest-btn" class="results-tab w-1/2" data-translate-key="nearest">Nearest</button>
+                <button id="sort-best-btn" class="results-tab w-1/2" data-translate-key="best">Best</button>
+              </div>
+
+              <!-- List Container -->
+              <div id="results-list" class="flex-1 overflow-y-auto mt-4 space-y-4 pr-2">
+                  <!-- Results populated here -->
+              </div>
+            </div>
+            
+            <!-- Right column (map) -->
+            <div id="results-map" class="w-full md:w-3/5 lg:w-2/3 order-1 md:order-2 bg-gray-200 dark:bg-gray-700 rounded-lg h-1/2 md:h-full">
               <!-- Results map shown here -->
-          </div>
+            </div>
 
-          <!-- Tabs -->
-          <div id="results-tabs" class="flex border-b dark:border-gray-700 mt-4">
-            <button id="sort-nearest-btn" class="results-tab" data-translate-key="nearest">Nearest</button>
-            <button id="sort-best-btn" class="results-tab" data-translate-key="best">Best</button>
-          </div>
-
-          <!-- List Container -->
-          <div id="results-list" class="flex-1 overflow-y-auto mt-4 space-y-4 pr-2">
-              <!-- Results populated here -->
           </div>
 
         </div>
